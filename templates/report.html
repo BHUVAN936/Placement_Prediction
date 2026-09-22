@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Overall Report | PlacementPredict
+{% endblock %}
+
+
+{% block page_title %}
+Overall Report
+{% endblock %}
+
+
+{% block content %}
+
+
+{% if all_results %}
+
+<div class="hero-card">
+
+    <div>
+
+        <span class="eyebrow">
+            TRAINING PIPELINE
+        </span>
+
+        <h2>
+            M1 → M4 Execution Report
+        </h2>
+
+        <p>
+            Complete module execution status.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="execution-list">
+
+    {% for item in all_results %}
+
+    <div class="execution-item">
+
+        <div class="execution-module">
+
+            <strong>
+                {{ item.module }}
+            </strong>
+
+        </div>
+
+
+        <div class="execution-message">
+
+            {{ item.message }}
+
+        </div>
+
+
+        {% if item.success %}
+
+        <span class="status completed">
+            Success
+        </span>
+
+        {% else %}
+
+        <span class="status failed">
+            Failed
+        </span>
+
+        {% endif %}
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+
+{% else %}
+
+
+<div class="hero-card">
+
+    <div>
+
+        <span class="eyebrow">
+            PROJECT REPORT
+        </span>
+
+        <h2>
+            PlacementPredict Overall Analysis
+        </h2>
+
+        <p>
+            Combined results from all machine learning
+            modules.
+        </p>
+
+    </div>
+
+
+    <div class="hero-actions">
+
+        <button
+            onclick="window.print()"
+            class="button secondary"
+        >
+            Print Report
+        </button>
+
+        <a
+            href="{{ url_for('run_all_route') }}"
+            class="button primary"
+        >
+            Run All
+        </a>
+
+    </div>
+
+</div>
+
+
+{% for code, item in module_reports.items() %}
+
+<section class="report-module">
+
+    <div class="report-module-header">
+
+        <div>
+
+            <span class="module-number">
+                {{ code }}
+            </span>
+
+            <h2>
+                {{ item.module.name }}
+            </h2>
+
+        </div>
+
+
+        {% if item.status == "Completed" %}
+
+        <span class="status completed">
+            Completed
+        </span>
+
+        {% else %}
+
+        <span class="status pending">
+            Not Run
+        </span>
+
+        {% endif %}
+
+    </div>
+
+
+    {% if item.summary %}
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    {% for key in item.summary[0].keys() %}
+
+                    <th>
+                        {{ key }}
+                    </th>
+
+                    {% endfor %}
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for row in item.summary %}
+
+                <tr>
+
+                    {% for value in row.values() %}
+
+                    <td>
+                        {{ value }}
+                    </td>
+
+                    {% endfor %}
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-small">
+
+        No results generated yet.
+
+    </div>
+
+    {% endif %}
+
+
+    {% if item.charts %}
+
+    <div class="mini-chart-grid">
+
+        {% for chart in item.charts[:4] %}
+
+        <div class="mini-chart">
+
+            <img
+                src="{{ url_for(
+                    'report_file',
+                    code=code,
+                    filename=chart
+                ) }}"
+                alt="{{ chart }}"
+            >
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+{% endfor %}
+
+{% endif %}
+
+
+{% endblock %}

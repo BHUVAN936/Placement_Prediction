@@ -1,0 +1,794 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ module.code }} | {{ module.name }} | PlacementPredict
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =====================================================
+     MODULE HERO
+     ===================================================== -->
+
+<section class="module-hero">
+
+    <div>
+
+        <span class="eyebrow">
+            {{ module.code }}
+        </span>
+
+        <h1>
+            {{ module.name }}
+        </h1>
+
+        <p>
+            {{ module.description }}
+        </p>
+
+    </div>
+
+
+    <div class="module-purpose-box">
+
+        <span>
+            PURPOSE
+        </span>
+
+        <strong>
+            {{ module.purpose }}
+        </strong>
+
+    </div>
+
+</section>
+
+
+<!-- ALGORITHM INDEX -->
+<section class="section algorithm-index-panel">
+    <div class="section-heading">
+        <div>
+            <span class="section-label">ALGORITHM INDEX</span>
+            <h2>{{ module.code }} algorithms</h2>
+        </div>
+        <p>Choose an algorithm to jump directly to its from-scratch explanation and dataset example.</p>
+    </div>
+    <div class="algorithm-index-grid">
+        {% for algorithm in algorithms.get(module.code, []) %}
+        <a href="#algorithm-{{ algorithm|replace(' ', '-')|replace('+', 'plus')|lower }}" class="algorithm-index-item">
+            <span>{{ "%02d"|format(loop.index) }}</span>
+            <strong>{{ algorithm }}</strong>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+
+<!-- =====================================================
+     QUICK UNDERSTANDING
+     ===================================================== -->
+
+<section class="section">
+
+
+    <div class="section-heading">
+
+        <div>
+
+            <span class="section-label">
+                QUICK UNDERSTANDING
+            </span>
+
+            <h2>
+                What this module does
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <div class="quick-grid">
+
+
+        <div class="quick-card">
+
+            <span>
+                INPUT
+            </span>
+
+            <h3>
+                Dataset Features
+            </h3>
+
+            <p>
+                The module uses the required features from
+                the Placement Prediction dataset as input.
+            </p>
+
+        </div>
+
+
+        <div class="quick-card">
+
+            <span>
+                PROCESS
+            </span>
+
+            <h3>
+                {{ module.name }}
+            </h3>
+
+            <p>
+                The data passes through the algorithms and
+                processing steps defined for this module.
+            </p>
+
+        </div>
+
+
+        <div class="quick-card">
+
+            <span>
+                OUTPUT
+            </span>
+
+            <h3>
+                Results
+            </h3>
+
+            <p>
+                The module produces calculated values,
+                model results, metrics and visualizations.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     WORKED EXAMPLES
+     ===================================================== -->
+
+{% if examples %}
+
+<section class="section">
+
+    <div class="section-heading">
+
+        <div>
+            <span class="section-label">
+                DATASET-BASED EXAMPLES
+            </span>
+            <h2>
+                Worked Examples
+            </h2>
+        </div>
+
+        <p>
+            These examples use values calculated from the
+            project dataset/sample.
+        </p>
+
+    </div>
+
+    <div class="example-grid">
+
+        {% for example in examples %}
+
+        <article class="example-card">
+
+            <div class="example-header">
+                <span class="example-number">
+                    Example {{ loop.index }}
+                </span>
+                <h3>{{ example["title"] }}</h3>
+            </div>
+
+            {% if example.get("sgpa_values") %}
+            <div class="example-block">
+                <span>INPUT</span>
+                <pre>SGPA values: {{ example["sgpa_values"] }}</pre>
+            </div>
+            <div class="formula-box">
+                <span>CALCULATION</span>
+                <code>Average SGPA = (sum of 8 semester SGPAs) / 8 = {{ example["average_sgpa"] }}</code>
+            </div>
+            <div class="result-box">
+                <span>RESULT</span>
+                <strong>{{ example["average_sgpa"] }}</strong>
+            </div>
+            {% endif %}
+
+            {% if example.get("counts") %}
+            <div class="example-block">
+                <span>INPUT</span>
+                <pre>PlacementStatus counts: {{ example["counts"] }}</pre>
+            </div>
+            <div class="formula-box">
+                <span>FORMULA</span>
+                <code>Gini = 1 - Sum(p_i^2)</code>
+            </div>
+            <div class="result-box">
+                <span>RESULT</span>
+                <strong>Gini = {{ example["gini"] }}</strong>
+            </div>
+            {% endif %}
+
+            {% if example.get("distance") is not none %}
+            <div class="example-block">
+                <span>INPUT</span>
+                <pre>Student 1: CGPA={{ example["cgpa1"] }}, Attendance={{ example["attendance1"] }}
+Student 2: CGPA={{ example["cgpa2"] }}, Attendance={{ example["attendance2"] }}</pre>
+            </div>
+            <div class="formula-box">
+                <span>FORMULA</span>
+                <code>d = sqrt((CGPA1-CGPA2)^2 + (Attendance1-Attendance2)^2)</code>
+            </div>
+            <div class="result-box">
+                <span>RESULT</span>
+                <strong>{{ example["distance"] }}</strong>
+            </div>
+            {% endif %}
+
+        </article>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+<!-- =====================================================
+     ALGORITHM-SPECIFIC EXPLANATION
+     ===================================================== -->
+
+{% if algorithm_details %}
+<section class="section">
+    <div class="section-heading">
+        <div>
+            <span class="section-label">ALGORITHM-SPECIFIC EXPLANATION</span>
+            <h2>How each algorithm works on this dataset</h2>
+        </div>
+        <p>Every example below uses values from the supplied 50,000-row, 32-column source dataset. No synthetic student data is introduced.</p>
+    </div>
+
+    <div class="process-list">
+        {% for item in algorithm_details %}
+        <article class="process-card algorithm-card" id="algorithm-{{ item.algorithm|replace(' ', '-')|replace('+', 'plus')|lower }}">
+            <div class="process-number">{{ "%02d"|format(loop.index) }}</div>
+            <div class="process-content">
+                <div class="process-title">
+                    <span>{{ module.code }} · ALGORITHM {{ loop.index }}</span>
+                    <h3>{{ item.algorithm }}</h3>
+                </div>
+                <div class="process-section">
+                    <h4>What it does</h4>
+                    <p>{{ item.purpose }}</p>
+                </div>
+                {% if item.data %}
+                <div class="process-section">
+                    <h4>Actual source-data example</h4>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tbody>
+                            {% for row in item.data %}
+                                <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="process-section">
+                    <h4>Clear interpretation</h4>
+                    <p>{{ item.result }}</p>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+
+<!-- =====================================================
+     COMPLETE PROCESS
+     ===================================================== -->
+
+<section class="section">
+
+
+    <div class="section-heading">
+
+        <div>
+
+            <span class="section-label">
+                STEP-BY-STEP PROCESS
+            </span>
+
+            <h2>
+                Complete {{ module.code }} Process
+            </h2>
+
+        </div>
+
+        <p>
+            Every important step used by this module is
+            explained below.
+        </p>
+
+    </div>
+
+
+    <div class="process-list">
+
+
+        {% for step in module.steps %}
+
+        <article class="process-card">
+
+
+            <div class="process-number">
+                {{ "%02d"|format(loop.index) }}
+            </div>
+
+
+            <div class="process-content">
+
+
+                <div class="process-title">
+
+                    <span>
+                        STEP {{ loop.index }}
+                    </span>
+
+                    <h3>
+                        {{ step.title }}
+                    </h3>
+
+                </div>
+
+
+                {% if step.what %}
+
+                <div class="process-section">
+
+                    <h4>
+                        What is done?
+                    </h4>
+
+                    <p>
+                        {{ step.what }}
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if step.formula %}
+
+                <div class="process-section">
+
+                    <h4>
+                        Formula / Method
+                    </h4>
+
+                    <div class="formula-box">
+
+                        <code>
+                            {{ step.formula }}
+                        </code>
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if step.understanding %}
+
+                <div class="process-section">
+
+                    <h4>
+                        Understanding
+                    </h4>
+
+                    <p>
+                        {{ step.understanding }}
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+
+            </div>
+
+
+        </article>
+
+        {% endfor %}
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     CSV RESULTS / SMALL PREVIEW
+     ===================================================== -->
+
+{% if csv_results %}
+
+<section class="section">
+
+
+    <div class="section-heading">
+
+        <div>
+
+            <span class="section-label">
+                RESULT PREVIEW
+            </span>
+
+            <h2>
+                Result Preview
+            </h2>
+
+        </div>
+
+    </div>
+
+    <p class="result-preview-note">Showing at most 100 randomly sampled rows from each CSV result file. The original result file is not modified.</p>
+
+    {% for item in csv_results %}
+
+    <div class="result-table-card">
+
+
+        <div class="result-card-header">
+
+            <h3>
+                {{ item.title }}
+            </h3>
+
+            <span>
+                CSV
+            </span>
+
+        </div>
+
+
+        {% if item.rows %}
+
+        <div class="table-container">
+
+            <table class="data-table">
+
+                <thead>
+
+                    <tr>
+
+                        {% for column in item.rows[0].keys() %}
+
+                        <th>
+                            {{ column }}
+                        </th>
+
+                        {% endfor %}
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for row in item.rows[:100] %}
+
+                    <tr>
+
+                        {% for value in row.values() %}
+
+                        <td>
+                            {{ value }}
+                        </td>
+
+                        {% endfor %}
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+
+            No CSV result records available.
+
+        </div>
+
+        {% endif %}
+
+
+    </div>
+
+    {% endfor %}
+
+
+</section>
+
+{% endif %}
+
+
+
+<!-- =====================================================
+     CHARTS
+     ===================================================== -->
+
+{% if charts %}
+
+<section class="section">
+
+
+    <div class="section-heading">
+
+        <div>
+
+            <span class="section-label">
+                VISUALIZATION
+            </span>
+
+            <h2>
+                Charts & Visualizations
+            </h2>
+
+        </div>
+
+        <p>
+            Visual results generated during the machine
+            learning workflow.
+        </p>
+
+    </div>
+
+
+    <div class="charts-grid">
+
+
+        {% for chart in charts %}
+
+        <div class="chart-card">
+
+
+            <div class="chart-header">
+
+                <h3>
+                    {{ chart.title }}
+                </h3>
+
+            </div>
+
+
+            <img
+                src="{{ url_for(
+                    'chart_file',
+                    code=module.code,
+                    filename=chart.filename
+                ) }}"
+                alt="{{ chart.title }}"
+                class="chart-image"
+            >
+
+
+        </div>
+
+        {% endfor %}
+
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+
+<!-- =====================================================
+     GENERATED FILES
+     ===================================================== -->
+
+{% if files %}
+
+<section class="section">
+
+
+    <div class="section-heading">
+
+        <div>
+
+            <span class="section-label">
+                OUTPUT FILES
+            </span>
+
+            <h2>
+                Generated Module Files
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <div class="file-list">
+
+
+        {% for file in files %}
+
+        <a
+            href="{{ url_for(
+                'report_file',
+                code=module.code,
+                filename=file
+            ) }}"
+            class="file-item"
+            target="_blank"
+        >
+
+            <span class="file-icon">
+                FILE
+            </span>
+
+            <span>
+                {{ file }}
+            </span>
+
+            <span class="file-arrow">
+                →
+            </span>
+
+        </a>
+
+        {% endfor %}
+
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+
+<!-- =====================================================
+     EXAM / VIVA REVISION
+     ===================================================== -->
+
+<section class="section">
+
+
+    <div class="revision-card">
+
+
+        <div class="revision-header">
+
+            <span class="section-label">
+                EXAM & VIVA
+            </span>
+
+            <h2>
+                Quick Revision
+            </h2>
+
+        </div>
+
+
+        <div class="revision-grid">
+
+
+            <div>
+
+                <h3>
+                    Remember
+                </h3>
+
+                <p>
+                    Know the purpose of every algorithm,
+                    its input, output and major steps.
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h3>
+                    Formula
+                </h3>
+
+                <p>
+                    Be able to write and explain the important
+                    mathematical formula used by the algorithm.
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h3>
+                    Dataset
+                </h3>
+
+                <p>
+                    Understand which features and targets are
+                    used in the PlacementPredict dataset.
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h3>
+                    Result
+                </h3>
+
+                <p>
+                    Understand how model performance and
+                    generated results are interpreted.
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     PRINT INFORMATION
+     ===================================================== -->
+
+<section class="print-note">
+
+    <strong>
+        Printing:
+    </strong>
+
+    Use
+    <kbd>Ctrl</kbd>
+    +
+    <kbd>P</kbd>
+    to print or save this module as a PDF.
+
+</section>
+
+
+{% endblock %}

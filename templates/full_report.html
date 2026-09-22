@@ -1,0 +1,777 @@
+{% extends "base.html" %}
+
+{% block title %}
+PlacementPredict | Full Report
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =====================================================
+     REPORT COVER
+     ===================================================== -->
+
+<section class="report-cover">
+
+    <div class="report-cover-content">
+
+        <span class="eyebrow">
+            MACHINE LEARNING PROJECT REPORT
+        </span>
+
+        <h1>
+            PlacementPredict
+        </h1>
+
+        <h2>
+            Placement Prediction & Analytics System
+        </h2>
+
+        <p>
+            Complete Machine Learning Report covering
+            M1 to M4.
+        </p>
+
+    </div>
+
+
+    <div class="report-cover-stats">
+
+        <div>
+
+            <span>
+                DATASET ROWS
+            </span>
+
+            <strong>
+                {{ dataset_info.rows }}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                DATASET COLUMNS
+            </span>
+
+            <strong>
+                {{ dataset_info.columns }}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                MODULES
+            </span>
+
+            <strong>
+                4
+            </strong>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     PRINT / REPORT ACTION
+     ===================================================== -->
+
+<div class="report-actions">
+
+    <button
+        type="button"
+        class="primary-button"
+        onclick="window.print()"
+    >
+        Print / Save as PDF
+    </button>
+
+</div>
+
+
+
+<!-- =====================================================
+     REPORT INTRODUCTION
+     ===================================================== -->
+
+<section class="report-section">
+
+
+    <div class="report-section-heading">
+
+        <span class="section-label">
+            01
+        </span>
+
+        <div>
+
+            <h2>
+                Project Overview
+            </h2>
+
+            <p>
+                PlacementPredict is a machine learning system
+                designed to analyze student academic,
+                technical and extracurricular information
+                for placement-related prediction and analysis.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="report-intro-grid">
+
+
+        <div class="report-info-card">
+
+            <span>
+                CLASSIFICATION
+            </span>
+
+            <h3>
+                PlacementStatus
+            </h3>
+
+            <p>
+                Used to determine the placement status of
+                a student.
+            </p>
+
+        </div>
+
+
+        <div class="report-info-card">
+
+            <span>
+                REGRESSION
+            </span>
+
+            <h3>
+                Salary Package
+            </h3>
+
+            <p>
+                Used for salary package prediction.
+            </p>
+
+        </div>
+
+
+        <div class="report-info-card">
+
+            <span>
+                DATASET
+            </span>
+
+            <h3>
+                {{ dataset_info.rows }} Records
+            </h3>
+
+            <p>
+                The source dataset contains 50,000 records and 32 original columns.
+                Engineered features are derived later and are not source columns.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     M1
+     ===================================================== -->
+
+<section class="report-section report-module-section">
+
+
+    <div class="report-module-heading">
+
+        <span class="module-number">
+            M1
+        </span>
+
+        <div>
+
+            <h2>
+                PlacementPredict
+            </h2>
+
+            <p>
+                Data loading, cleaning, exploratory data
+                analysis, preprocessing and feature engineering.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- M1 STEPS -->
+
+    <div class="report-steps">
+
+
+        {% for step in modules["M1"].steps %}
+
+        <article class="report-step">
+
+
+            <div class="report-step-number">
+                {{ "%02d"|format(loop.index) }}
+            </div>
+
+
+            <div>
+
+                <h3>
+                    {{ step.title }}
+                </h3>
+
+
+                {% if step.what %}
+
+                <h4>
+                    What is done?
+                </h4>
+
+                <p>
+                    {{ step.what }}
+                </p>
+
+                {% endif %}
+
+
+                {% if step.formula %}
+
+                <h4>
+                    Formula / Method
+                </h4>
+
+                <div class="formula-box">
+
+                    <code>
+                        {{ step.formula }}
+                    </code>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if step.understanding %}
+
+                <h4>
+                    Understanding
+                </h4>
+
+                <p>
+                    {{ step.understanding }}
+                </p>
+
+                {% endif %}
+
+
+            </div>
+
+
+        </article>
+
+        {% endfor %}
+
+
+    </div>
+
+
+    </section>
+
+
+
+<!-- =====================================================
+     M2
+     ===================================================== -->
+
+<section class="report-section report-module-section">
+
+
+    <div class="report-module-heading">
+
+        <span class="module-number">
+            M2
+        </span>
+
+        <div>
+
+            <h2>
+                Supervised Learning
+            </h2>
+
+            <p>
+                Regression and classification algorithms for
+                predicting salary package and placement status.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="report-steps">
+
+
+        {% for step in modules["M2"].steps %}
+
+        <article class="report-step">
+
+
+            <div class="report-step-number">
+                {{ "%02d"|format(loop.index) }}
+            </div>
+
+
+            <div>
+
+                <h3>
+                    {{ step.title }}
+                </h3>
+
+
+                {% if step.what %}
+
+                <h4>
+                    What is done?
+                </h4>
+
+                <p>
+                    {{ step.what }}
+                </p>
+
+                {% endif %}
+
+
+                {% if step.formula %}
+
+                <h4>
+                    Formula / Method
+                </h4>
+
+                <div class="formula-box">
+
+                    <code>
+                        {{ step.formula }}
+                    </code>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if step.understanding %}
+
+                <h4>
+                    Understanding
+                </h4>
+
+                <p>
+                    {{ step.understanding }}
+                </p>
+
+                {% endif %}
+
+
+            </div>
+
+
+        </article>
+
+        {% endfor %}
+
+
+    </div>
+
+
+    </section>
+
+
+
+<!-- =====================================================
+     M3
+     ===================================================== -->
+
+<section class="report-section report-module-section">
+
+
+    <div class="report-module-heading">
+
+        <span class="module-number">
+            M3
+        </span>
+
+        <div>
+
+            <h2>
+                Tree-Based Models
+            </h2>
+
+            <p>
+                Tree-based machine learning algorithms and
+                ensemble methods for placement prediction.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="report-steps">
+
+
+        {% for step in modules["M3"].steps %}
+
+        <article class="report-step">
+
+
+            <div class="report-step-number">
+                {{ "%02d"|format(loop.index) }}
+            </div>
+
+
+            <div>
+
+                <h3>
+                    {{ step.title }}
+                </h3>
+
+
+                {% if step.what %}
+
+                <h4>
+                    What is done?
+                </h4>
+
+                <p>
+                    {{ step.what }}
+                </p>
+
+                {% endif %}
+
+
+                {% if step.formula %}
+
+                <h4>
+                    Formula / Method
+                </h4>
+
+                <div class="formula-box">
+
+                    <code>
+                        {{ step.formula }}
+                    </code>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if step.understanding %}
+
+                <h4>
+                    Understanding
+                </h4>
+
+                <p>
+                    {{ step.understanding }}
+                </p>
+
+                {% endif %}
+
+
+            </div>
+
+
+        </article>
+
+        {% endfor %}
+
+
+    </div>
+
+
+    </section>
+
+
+
+<!-- =====================================================
+     M4
+     ===================================================== -->
+
+<section class="report-section report-module-section">
+
+
+    <div class="report-module-heading">
+
+        <span class="module-number">
+            M4
+        </span>
+
+        <div>
+
+            <h2>
+                Unsupervised Learning
+            </h2>
+
+            <p>
+                Clustering and dimensionality reduction using
+                K-Means, Hierarchical Clustering, DBSCAN and PCA.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="report-steps">
+
+
+        {% for step in modules["M4"].steps %}
+
+        <article class="report-step">
+
+
+            <div class="report-step-number">
+                {{ "%02d"|format(loop.index) }}
+            </div>
+
+
+            <div>
+
+                <h3>
+                    {{ step.title }}
+                </h3>
+
+
+                {% if step.what %}
+
+                <h4>
+                    What is done?
+                </h4>
+
+                <p>
+                    {{ step.what }}
+                </p>
+
+                {% endif %}
+
+
+                {% if step.formula %}
+
+                <h4>
+                    Formula / Method
+                </h4>
+
+                <div class="formula-box">
+
+                    <code>
+                        {{ step.formula }}
+                    </code>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if step.understanding %}
+
+                <h4>
+                    Understanding
+                </h4>
+
+                <p>
+                    {{ step.understanding }}
+                </p>
+
+                {% endif %}
+
+
+            </div>
+
+
+        </article>
+
+        {% endfor %}
+
+
+    </div>
+
+
+    </section>
+
+
+
+<!-- =====================================================
+     ALGORITHM HIGHLIGHTS
+     ===================================================== -->
+
+{% for code in ["M1", "M2", "M3", "M4"] %}
+{% if algorithm_details.get(code) %}
+<section class="report-section">
+    <div class="report-section-heading">
+        <span class="section-label">{{ code }}</span>
+        <div>
+            <h2>Algorithm Highlights & Dataset Examples</h2>
+            <p>Condensed from the detailed module page. Examples use the supplied source dataset only.</p>
+        </div>
+    </div>
+    <div class="results-grid">
+        {% for item in algorithm_details[code] %}
+        <article class="result-card">
+            <div class="result-card-header">
+                <h3>{{ item.algorithm }}</h3>
+                <span>EXAMPLE</span>
+            </div>
+            <p>{{ item.purpose }}</p>
+            {% if item.data %}
+            <div class="table-container">
+                <table class="data-table">
+                    <tbody>
+                    {% for row in item.data[:8] %}
+                        <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+            <div class="result-row"><span>Interpretation</span><strong>{{ item.result }}</strong></div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endfor %}
+
+
+<!-- =====================================================
+     CHARTS — SELECTED REPORT CHARTS ONLY
+     ===================================================== -->
+
+{#
+  The project contains many generated charts. The full report keeps only
+  the most useful, non-duplicated charts so the printed report stays concise.
+  No source data or chart files are deleted.
+#}
+{% set selected_charts = {
+    "M1": [
+        "Placement Distribution",
+        "Cgpa Distribution",
+        "Attendance Distribution",
+        "Internship Distribution",
+        "Sgpa By Semester",
+        "Academic Skill Features"
+    ],
+    "M2": [
+        "Logistic Regression Confusion Matrix",
+        "M2 Classification Comparison",
+        "M2 Regression Comparison",
+        "Ridge Logistic Regression Confusion Matrix"
+    ],
+    "M3": [
+        "M3 Model Comparison",
+        "Random Forest Feature Importance",
+        "Xgboost Feature Importance",
+        "Decision Tree Confusion Matrix"
+    ],
+    "M4": [
+        "Dbscan Cluster Distribution",
+        "Hierarchical Clustering Cluster Distribution",
+        "K-Means Cluster Distribution",
+        "K-Meansplusplus Cluster Distribution",
+        "Kmeans Pca Projection",
+        "Pca Explained Variance"
+    ]
+} %}
+
+{% for code, data in all_modules.items() %}
+
+{% if data.charts %}
+
+<section class="report-section">
+
+
+    <div class="report-section-heading">
+
+        <span class="section-label">
+            {{ code }}
+        </span>
+
+        <div>
+
+            <h2>
+                Charts & Visualizations
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <div class="charts-grid">
+
+
+        {% for chart in data.charts if chart.title in selected_charts.get(code, []) %}
+
+        <div class="chart-card">
+
+
+            <div class="chart-header">
+
+                <h3>
+                    {{ chart.title }}
+                </h3>
+
+            </div>
+
+
+            <img
+                src="{{ url_for(
+                    'chart_file',
+                    code=code,
+                    filename=chart.filename
+                ) }}"
+                alt="{{ chart.title }}"
+                class="chart-image"
+            >
+
+
+        </div>
+
+        {% endfor %}
+
+
+    </div>
+
+
+</section>
+
+{% endif %}
+
+{% endfor %}
+{% endblock %}

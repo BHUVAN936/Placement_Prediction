@@ -1,0 +1,9 @@
+Column,UniqueValues,MissingValues
+Gender,2,0
+City,10,0
+CollegeTier,3,0
+Stream,6,0
+Specialisation,4,0
+Hostel,2,0
+HistoryOfBacklogs,2,0
+CGPA_Tier,3,0

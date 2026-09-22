@@ -1,0 +1,41 @@
+{
+    "module": "M1",
+    "module_name": "PlacementPredict as a System",
+    "status": "completed",
+    "dataset": {
+        "rows": 50000,
+        "columns": 38
+    },
+    "target": {
+        "classification": "PlacementStatus",
+        "regression": "Salary Package",
+        "distribution": {
+            "0": 17144,
+            "1": 32856
+        }
+    },
+    "features": {
+        "original_model_features": 28,
+        "transformed_features": 52,
+        "engineered_features": [
+            "AverageSGPA",
+            "AcademicConsistency",
+            "AcademicScore",
+            "SkillScore",
+            "InterviewScore",
+            "ExperienceScore"
+        ]
+    },
+    "preprocessing": {
+        "numerical_features": 20,
+        "categorical_features": 8
+    },
+    "eda": {
+        "charts_generated": 10
+    },
+    "files": {
+        "preprocessor": "C:\\Users\\Bhuvan\\PycharmProjects\\PythonProject\\Placement_Prediction\\models\\M1\\m1_preprocessor.joblib",
+        "report_directory": "C:\\Users\\Bhuvan\\PycharmProjects\\PythonProject\\Placement_Prediction\\reports\\M1",
+        "model_directory": "C:\\Users\\Bhuvan\\PycharmProjects\\PythonProject\\Placement_Prediction\\models\\M1"
+    }
+}

@@ -1,0 +1,48 @@
+{
+    "module": "M4",
+    "module_name": "Unsupervised Learning",
+    "status": "completed",
+    "dataset_rows": 50000,
+    "numeric_features": 28,
+    "excluded_targets": [
+        "PlacementStatus",
+        "Salary Package"
+    ],
+    "pca": {
+        "algorithm": "PCA",
+        "original_features": 28,
+        "reduced_features": 12,
+        "explained_variance": 0.9571241017674049
+    },
+    "clustering": [
+        {
+            "Algorithm": "K-Means",
+            "Clusters": 3,
+            "Inertia": 664555.7361150981,
+            "silhouette_score": 0.2590636200463387,
+            "calinski_harabasz_score": 27665.11267286631
+        },
+        {
+            "Algorithm": "K-Means++",
+            "Clusters": 3,
+            "Inertia": 664555.3102410911,
+            "silhouette_score": 0.2591867105380296,
+            "calinski_harabasz_score": 27665.156278185037
+        },
+        {
+            "Algorithm": "Hierarchical Clustering",
+            "Clusters": 3,
+            "SampleSize": 5000,
+            "silhouette_score": 0.2506712897393731,
+            "calinski_harabasz_score": 2398.5554689787677
+        },
+        {
+            "Algorithm": "DBSCAN",
+            "Clusters": 0,
+            "NoisePoints": 10000,
+            "SampleSize": 10000,
+            "silhouette_score": 0.0,
+            "calinski_harabasz_score": 0.0
+        }
+    ]
+}

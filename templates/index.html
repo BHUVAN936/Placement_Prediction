@@ -1,10 +1,593 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block title %}
+PlacementPredict | Dashboard
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =====================================================
+     HERO
+     ===================================================== -->
+
+<section class="hero-section">
+
+    <div class="hero-content">
+
+        <span class="eyebrow">
+            MACHINE LEARNING PROJECT
+        </span>
+
+        <h1>
+            Placement Prediction
+            <br>
+            & Analytics System
+        </h1>
+
+        <p>
+            A complete machine learning workflow covering
+            data preparation, supervised learning,
+            tree-based models and unsupervised learning.
+        </p>
+
+    </div>
+
+
+    <div class="hero-badge">
+
+        <strong>
+            M1 - M4
+        </strong>
+
+        <span>
+            Complete ML Pipeline
+        </span>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     DATASET OVERVIEW
+     ===================================================== -->
+
+<section class="section">
+
+    <div class="section-heading">
+
+        <div>
+
+            <span class="section-label">
+                DATASET
+            </span>
+
+            <h2>
+                Dataset Overview
+            </h2>
+
+        </div>
+
+        <p>
+            The dashboard displays only 200 randomly selected
+            records for easier viewing.
+        </p>
+
+    </div>
+
+
+    <div class="stats-grid">
+
+
+        <!-- ROWS -->
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                Total Records
+            </span>
+
+            <strong>
+                {{ dataset_info.rows }}
+            </strong>
+
+            <small>
+                Complete dataset
+            </small>
+
+        </div>
+
+
+        <!-- COLUMNS -->
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                Total Columns
+            </span>
+
+            <strong>
+                {{ dataset_info.columns }}
+            </strong>
+
+            <small>
+                Features + targets
+            </small>
+
+        </div>
+
+
+        <!-- TARGET -->
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                Classification Target
+            </span>
+
+            <strong>
+                PlacementStatus
+            </strong>
+
+            <small>
+                Placement prediction
+            </small>
+
+        </div>
+
+
+        <!-- REGRESSION -->
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                Regression Target
+            </span>
+
+            <strong>
+                Salary Package
+            </strong>
+
+            <small>
+                Salary prediction
+            </small>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     DATASET INFORMATION
+     ===================================================== -->
+
+<section class="section">
+
+    <div class="info-card">
+
+        <div class="info-icon">
+            i
+        </div>
+
+        <div>
+
+            <h3>
+                How the dataset is displayed
+            </h3>
+
+            <p>
+                The original dataset contains
+                <strong>{{ dataset_info.rows }}</strong>
+                records.
+                The dashboard intentionally displays only
+                <strong>200 random records</strong>
+                so that the web page remains fast and easy
+                to understand.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     MODULES
+     ===================================================== -->
+
+<section class="section">
+
+    <div class="section-heading">
+
+        <div>
+
+            <span class="section-label">
+                ML WORKFLOW
+            </span>
+
+            <h2>
+                Machine Learning Modules
+            </h2>
+
+        </div>
+
+        <p>
+            Select a module to view its complete process,
+            formulas, examples, results and visualizations.
+        </p>
+
+    </div>
+
+
+    <div class="module-grid">
+
+
+        {% for code, module in modules.items() %}
+
+        <a
+            href="{{ url_for('module_page', code=code) }}"
+            class="module-card"
+        >
+
+
+            <div class="module-card-top">
+
+                <span class="module-number">
+                    {{ code }}
+                </span>
+
+                <span class="module-arrow">
+                    →
+                </span>
+
+            </div>
+
+
+            <h3>
+                {{ module.title }}
+            </h3>
+
+
+            <p>
+                {{ module.description }}
+            </p>
+
+
+            <div class="module-purpose">
+
+                <span>
+                    Purpose
+                </span>
+
+                <strong>
+                    {{ module.purpose }}
+                </strong>
+
+            </div>
+
+
+            <div class="module-link">
+                View Complete Module →
+            </div>
+
+
+        </a>
+
+        {% endfor %}
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     RANDOM DATASET RECORDS
+     ===================================================== -->
+
+<section class="section">
+
+
+    <div class="section-heading">
+
+        <div>
+
+            <span class="section-label">
+                SAMPLE DATA
+            </span>
+
+            <h2>
+                200 Random Dataset Records
+            </h2>
+
+        </div>
+
+        <p>
+            These records are randomly selected from the
+            complete dataset.
+        </p>
+
+    </div>
+
+
+    <div class="table-container">
+
+
+        {% if preview %}
+
+        <table class="data-table">
+
+
+            <thead>
+
+                <tr>
+
+                    {% for column in preview[0].keys() %}
+
+                    <th>
+                        {{ column }}
+                    </th>
+
+                    {% endfor %}
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for row in preview %}
+
+                <tr>
+
+                    {% for value in row.values() %}
+
+                    <td>
+
+                        {% if value is none %}
+
+                            -
+
+                        {% else %}
+
+                            {{ value }}
+
+                        {% endif %}
+
+                    </td>
+
+                    {% endfor %}
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+
+        </table>
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <h3>
+                No dataset records available
+            </h3>
+
+            <p>
+                Please check the dataset file inside
+                the data folder.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     ML PIPELINE
+     ===================================================== -->
+
+<section class="section">
+
+
+    <div class="section-heading">
+
+        <div>
+
+            <span class="section-label">
+                COMPLETE WORKFLOW
+            </span>
+
+            <h2>
+                PlacementPredict Pipeline
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <div class="pipeline">
+
+
+        <!-- M1 -->
+
+        <div class="pipeline-step">
+
+            <div class="pipeline-number">
+                01
+            </div>
+
+            <div>
+
+                <h3>
+                    M1 - PlacementPredict
+                </h3>
+
+                <p>
+                    Data loading, cleaning, EDA,
+                    preprocessing and feature engineering.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="pipeline-connector">
+            ↓
+        </div>
+
+
+        <!-- M2 -->
+
+        <div class="pipeline-step">
+
+            <div class="pipeline-number">
+                02
+            </div>
+
+            <div>
+
+                <h3>
+                    M2 - Supervised Learning
+                </h3>
+
+                <p>
+                    Regression and classification models
+                    for placement and salary prediction.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="pipeline-connector">
+            ↓
+        </div>
+
+
+        <!-- M3 -->
+
+        <div class="pipeline-step">
+
+            <div class="pipeline-number">
+                03
+            </div>
+
+            <div>
+
+                <h3>
+                    M3 - Tree-Based Models
+                </h3>
+
+                <p>
+                    Decision Tree, Random Forest, AdaBoost,
+                    Gradient Boosting, XGBoost and LightGBM.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="pipeline-connector">
+            ↓
+        </div>
+
+
+        <!-- M4 -->
+
+        <div class="pipeline-step">
+
+            <div class="pipeline-number">
+                04
+            </div>
+
+            <div>
+
+                <h3>
+                    M4 - Unsupervised Learning
+                </h3>
+
+                <p>
+                    K-Means, K-Means++, Hierarchical
+                    Clustering, DBSCAN and PCA.
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     REPORT
+     ===================================================== -->
+
+<section class="section">
+
+
+    <div class="report-card">
+
+
+        <div>
+
+            <span class="section-label">
+                DOCUMENTATION
+            </span>
+
+            <h2>
+                Complete Web Report
+            </h2>
+
+            <p>
+                View the complete M1-M4 project report in one
+                printable page, including formulas, worked
+                examples, generated results and charts.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('full_report') }}"
+            class="primary-button"
+        >
+            Open Full Report →
+        </a>
+
+
+    </div>
+
+</section>
+
+
+
+{% endblock %}

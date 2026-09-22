@@ -1,0 +1,63 @@
+{
+    "module": "M3",
+    "module_name": "Tree-Based Models",
+    "status": "completed",
+    "dataset_rows": 50000,
+    "input_features": 36,
+    "models": [
+        {
+            "Model": "Decision Tree",
+            "Task": "Classification",
+            "Accuracy": 0.9052,
+            "Precision": 0.9180669144981413,
+            "Recall": 0.9395830162836707,
+            "F1": 0.9287003610108303,
+            "ROC_AUC": 0.9561208370741311
+        },
+        {
+            "Model": "Random Forest",
+            "Task": "Classification",
+            "Accuracy": 0.9162,
+            "Precision": 0.9211106214191274,
+            "Recall": 0.9541926647390048,
+            "F1": 0.9373598445208552,
+            "ROC_AUC": 0.9781063865773942
+        },
+        {
+            "Model": "AdaBoost",
+            "Task": "Classification",
+            "Accuracy": 0.9175,
+            "Precision": 0.9241216415707115,
+            "Recall": 0.9526708263582407,
+            "F1": 0.9381790932933683,
+            "ROC_AUC": 0.9776695847884332
+        },
+        {
+            "Model": "Gradient Boosting",
+            "Task": "Classification",
+            "Accuracy": 0.919,
+            "Precision": 0.9268039709586605,
+            "Recall": 0.9519099071678587,
+            "F1": 0.9391891891891891,
+            "ROC_AUC": 0.979102216544953
+        },
+        {
+            "Model": "XGBoost",
+            "Task": "Classification",
+            "Accuracy": 0.9214,
+            "Precision": 0.9292179848642231,
+            "Recall": 0.9529751940343936,
+            "F1": 0.940946656649136,
+            "ROC_AUC": 0.9799708937869094
+        },
+        {
+            "Model": "LightGBM",
+            "Task": "Classification",
+            "Accuracy": 0.9202,
+            "Precision": 0.9273131014063657,
+            "Recall": 0.9532795617105463,
+            "F1": 0.940117064385412,
+            "ROC_AUC": 0.9799248702698242
+        }
+    ]
+}

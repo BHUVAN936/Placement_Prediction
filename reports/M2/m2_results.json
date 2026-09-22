@@ -1,0 +1,115 @@
+{
+    "module": "M2",
+    "module_name": "Supervised Learning",
+    "status": "completed",
+    "dataset_rows": 50000,
+    "input_features": 36,
+    "regression_target": "Salary Package",
+    "classification_target": "PlacementStatus",
+    "regression_models": [
+        {
+            "Model": "Linear Regression",
+            "Task": "Regression",
+            "MAE": 2.017587185297005,
+            "MSE": 6.764664443275073,
+            "RMSE": 2.6008968536401196,
+            "R2": 0.9133873716958067
+        },
+        {
+            "Model": "Ridge Regression",
+            "Task": "Regression",
+            "MAE": 2.017650102898607,
+            "MSE": 6.764719459007201,
+            "RMSE": 2.6009074299188737,
+            "R2": 0.913386667291738
+        },
+        {
+            "Model": "Lasso Regression",
+            "Task": "Regression",
+            "MAE": 2.017685143499303,
+            "MSE": 6.765334866554616,
+            "RMSE": 2.6010257335433296,
+            "R2": 0.9133787878077507
+        },
+        {
+            "Model": "Elastic Net",
+            "Task": "Regression",
+            "MAE": 2.0190031101154755,
+            "MSE": 6.766822001425852,
+            "RMSE": 2.6013115925290173,
+            "R2": 0.9133597470022651
+        }
+    ],
+    "classification_models": [
+        {
+            "Model": "Logistic Regression",
+            "Task": "Classification",
+            "Accuracy": 0.921,
+            "Precision": 0.928031985784096,
+            "Recall": 0.9537361132247756,
+            "F1": 0.940708495947163,
+            "ROC_AUC": 0.9800383091412513
+        },
+        {
+            "Model": "Ridge Logistic Regression",
+            "Task": "Classification",
+            "Accuracy": 0.921,
+            "Precision": 0.928031985784096,
+            "Recall": 0.9537361132247756,
+            "F1": 0.940708495947163,
+            "ROC_AUC": 0.9800383091412513
+        }
+    ],
+    "models": [
+        {
+            "Model": "Linear Regression",
+            "Task": "Regression",
+            "MAE": 2.017587185297005,
+            "MSE": 6.764664443275073,
+            "RMSE": 2.6008968536401196,
+            "R2": 0.9133873716958067
+        },
+        {
+            "Model": "Ridge Regression",
+            "Task": "Regression",
+            "MAE": 2.017650102898607,
+            "MSE": 6.764719459007201,
+            "RMSE": 2.6009074299188737,
+            "R2": 0.913386667291738
+        },
+        {
+            "Model": "Lasso Regression",
+            "Task": "Regression",
+            "MAE": 2.017685143499303,
+            "MSE": 6.765334866554616,
+            "RMSE": 2.6010257335433296,
+            "R2": 0.9133787878077507
+        },
+        {
+            "Model": "Elastic Net",
+            "Task": "Regression",
+            "MAE": 2.0190031101154755,
+            "MSE": 6.766822001425852,
+            "RMSE": 2.6013115925290173,
+            "R2": 0.9133597470022651
+        },
+        {
+            "Model": "Logistic Regression",
+            "Task": "Classification",
+            "Accuracy": 0.921,
+            "Precision": 0.928031985784096,
+            "Recall": 0.9537361132247756,
+            "F1": 0.940708495947163,
+            "ROC_AUC": 0.9800383091412513
+        },
+        {
+            "Model": "Ridge Logistic Regression",
+            "Task": "Classification",
+            "Accuracy": 0.921,
+            "Precision": 0.928031985784096,
+            "Recall": 0.9537361132247756,
+            "F1": 0.940708495947163,
+            "ROC_AUC": 0.9800383091412513
+        }
+    ]
+}
