@@ -14,12 +14,7 @@ def run_pca(
     output_dir=None,
     variance_threshold=0.95
 ):
-    """
-    PCA dimensionality reduction.
 
-    Keeps enough components to explain approximately
-    the requested amount of variance.
-    """
 
     X = np.asarray(X)
 

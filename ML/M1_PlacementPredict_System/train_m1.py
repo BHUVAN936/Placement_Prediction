@@ -1389,6 +1389,128 @@ def run_eda(df):
 
         chart_count += 1
 
+    # --------------------------------------------------------
+    # 11. MISSING VALUES ANALYSIS
+    # --------------------------------------------------------
+    missing_counts = df.isna().sum()
+    missing_cols = missing_counts[missing_counts > 0]
+    if missing_cols.empty:
+        missing_cols = pd.Series([0, 0, 0, 0, 0], index=["CGPA", "AttendancePercent", "Internships", "AptitudeTestScore", "Salary Package"])
+
+    plt.figure(figsize=(9, 5))
+    plt.bar(missing_cols.index.astype(str), missing_cols.values, color='#e74c3c', alpha=0.85)
+    plt.xlabel("Dataset Feature Column")
+    plt.ylabel("Missing Values Count")
+    plt.title("Missing Values Analysis per Feature Column")
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    plt.savefig(REPORT_DIR / "missing_values.png", dpi=150)
+    plt.close()
+    chart_count += 1
+
+    # --------------------------------------------------------
+    # 12. DUPLICATES CHECK CHART
+    # --------------------------------------------------------
+    total_rows = len(df)
+    duplicate_rows = int(df.duplicated().sum())
+    unique_rows = total_rows - duplicate_rows
+
+    plt.figure(figsize=(7, 5))
+    plt.bar(["Unique Records", "Duplicate Records"], [unique_rows, duplicate_rows], color=['#2ecc71', '#e74c3c'], alpha=0.85)
+    plt.ylabel("Record Count")
+    plt.title("Dataset Record Deduplication Analysis")
+    for i, v in enumerate([unique_rows, duplicate_rows]):
+        plt.text(i, v + (total_rows * 0.01), f"{v:,}", ha='center', fontweight='bold')
+    plt.tight_layout()
+    plt.savefig(REPORT_DIR / "duplicates_check.png", dpi=150)
+    plt.close()
+    chart_count += 1
+
+    # --------------------------------------------------------
+    # 13. DATA TYPE DISTRIBUTION CHART
+    # --------------------------------------------------------
+    dtypes_counts = df.dtypes.astype(str).value_counts()
+    plt.figure(figsize=(7, 6))
+    plt.pie(dtypes_counts.values, labels=dtypes_counts.index, autopct="%1.1f%%", colors=['#3498db', '#9b59b6', '#f1c40f', '#e67e22'])
+    plt.title("Feature Data Type Conversion & Distribution")
+    plt.tight_layout()
+    plt.savefig(REPORT_DIR / "datatype_distribution.png", dpi=150)
+    plt.close()
+    chart_count += 1
+
+    # --------------------------------------------------------
+    # 14. OUTLIER DETECTION CHART (BOXPLOTS)
+    # --------------------------------------------------------
+    outlier_cols = [c for c in ["CGPA", "AttendancePercent", "AptitudeTestScore", "Salary Package"] if c in df.columns]
+    if outlier_cols:
+        fig, axes = plt.subplots(1, len(outlier_cols), figsize=(3.5 * len(outlier_cols), 5))
+        if len(outlier_cols) == 1:
+            axes = [axes]
+        for ax, col in zip(axes, outlier_cols):
+            ax.boxplot(df[col].dropna(), patch_artist=True, boxprops=dict(facecolor='#3498db', color='#2980b9'))
+            ax.set_title(col)
+            ax.set_ylabel("Value Range")
+        fig.suptitle("Outlier Detection (IQR Bounds: [Q1 - 1.5*IQR, Q3 + 1.5*IQR])", fontsize=12)
+        plt.tight_layout()
+        plt.savefig(REPORT_DIR / "outlier_detection.png", dpi=150)
+        plt.close()
+        chart_count += 1
+
+    # --------------------------------------------------------
+    # 15. PREPROCESSING: SCALING BEFORE vs AFTER
+    # --------------------------------------------------------
+    scale_cols = [c for c in ["CGPA", "AttendancePercent", "AptitudeTestScore"] if c in df.columns]
+    if scale_cols:
+        # Before Scaling Plot
+        fig, axes = plt.subplots(1, len(scale_cols), figsize=(3.5 * len(scale_cols), 4))
+        if len(scale_cols) == 1: axes = [axes]
+        for ax, col in zip(axes, scale_cols):
+            ax.hist(df[col].dropna(), bins=25, color='#e67e22', alpha=0.75)
+            ax.set_title(f"Raw {col}")
+            ax.set_ylabel("Count")
+        fig.suptitle("Feature Distribution BEFORE Standard Scaling (Raw Range)", fontsize=12)
+        plt.tight_layout()
+        plt.savefig(REPORT_DIR / "scaling_before.png", dpi=150)
+        plt.close()
+        chart_count += 1
+
+        # After Scaling Plot (Z-scores)
+        fig, axes = plt.subplots(1, len(scale_cols), figsize=(3.5 * len(scale_cols), 4))
+        if len(scale_cols) == 1: axes = [axes]
+        for ax, col in zip(axes, scale_cols):
+            z_vals = (df[col].dropna() - df[col].dropna().mean()) / (df[col].dropna().std() + 1e-9)
+            ax.hist(z_vals, bins=25, color='#27ae60', alpha=0.75)
+            ax.set_title(f"Scaled {col} (z)")
+            ax.set_ylabel("Count")
+        fig.suptitle("Feature Distribution AFTER Standard Scaling (z ~ N(0,1))", fontsize=12)
+        plt.tight_layout()
+        plt.savefig(REPORT_DIR / "scaling_after.png", dpi=150)
+        plt.close()
+        chart_count += 1
+
+    # --------------------------------------------------------
+    # 16. ENGINEERED ACADEMIC & SKILL FEATURES COMBINED
+    # --------------------------------------------------------
+    if "AcademicScore" in df.columns and "SkillScore" in df.columns:
+        fig, axes = plt.subplots(1, 2, figsize=(10, 4.5))
+        axes[0].hist(df["AcademicScore"].dropna(), bins=30, color='#8e44ad', alpha=0.8)
+        axes[0].set_title("Engineered AcademicScore Distribution")
+        axes[0].set_xlabel("AcademicScore (0-100)")
+        axes[0].set_ylabel("Students")
+
+        axes[1].hist(df["SkillScore"].dropna(), bins=30, color='#16a085', alpha=0.8)
+        axes[1].set_title("Engineered SkillScore Distribution")
+        axes[1].set_xlabel("SkillScore (0-100)")
+        axes[1].set_ylabel("Students")
+
+        plt.tight_layout()
+        plt.savefig(REPORT_DIR / "academic_skill_features.png", dpi=150)
+        plt.close()
+        chart_count += 1
+
+    if (REPORT_DIR / "09_correlation_matrix.png").exists():
+        import shutil
+        shutil.copy(REPORT_DIR / "09_correlation_matrix.png", REPORT_DIR / "correlation_heatmap.png")
 
     print(
         f"Charts generated: {chart_count}"

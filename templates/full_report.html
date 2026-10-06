@@ -30,7 +30,7 @@ PlacementPredict | Full Report
 
         <p>
             Complete Machine Learning Report covering
-            M1 to M4.
+            M1 to M5.
         </p>
 
     </div>
@@ -71,7 +71,7 @@ PlacementPredict | Full Report
             </span>
 
             <strong>
-                4
+                5
             </strong>
 
         </div>
@@ -625,143 +625,102 @@ PlacementPredict | Full Report
 
     </section>
 
-
-
 <!-- =====================================================
-     ALGORITHM HIGHLIGHTS
+     M5
      ===================================================== -->
 
-{% for code in ["M1", "M2", "M3", "M4"] %}
-{% if algorithm_details.get(code) %}
-<section class="report-section">
-    <div class="report-section-heading">
-        <span class="section-label">{{ code }}</span>
-        <div>
-            <h2>Algorithm Highlights & Dataset Examples</h2>
-            <p>Condensed from the detailed module page. Examples use the supplied source dataset only.</p>
-        </div>
-    </div>
-    <div class="results-grid">
-        {% for item in algorithm_details[code] %}
-        <article class="result-card">
-            <div class="result-card-header">
-                <h3>{{ item.algorithm }}</h3>
-                <span>EXAMPLE</span>
-            </div>
-            <p>{{ item.purpose }}</p>
-            {% if item.data %}
-            <div class="table-container">
-                <table class="data-table">
-                    <tbody>
-                    {% for row in item.data[:8] %}
-                        <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% endif %}
-            <div class="result-row"><span>Interpretation</span><strong>{{ item.result }}</strong></div>
-        </article>
-        {% endfor %}
-    </div>
-</section>
-{% endif %}
-{% endfor %}
+<section class="report-section report-module-section">
 
 
-<!-- =====================================================
-     CHARTS — SELECTED REPORT CHARTS ONLY
-     ===================================================== -->
+    <div class="report-module-heading">
 
-{#
-  The project contains many generated charts. The full report keeps only
-  the most useful, non-duplicated charts so the printed report stays concise.
-  No source data or chart files are deleted.
-#}
-{% set selected_charts = {
-    "M1": [
-        "Placement Distribution",
-        "Cgpa Distribution",
-        "Attendance Distribution",
-        "Internship Distribution",
-        "Sgpa By Semester",
-        "Academic Skill Features"
-    ],
-    "M2": [
-        "Logistic Regression Confusion Matrix",
-        "M2 Classification Comparison",
-        "M2 Regression Comparison",
-        "Ridge Logistic Regression Confusion Matrix"
-    ],
-    "M3": [
-        "M3 Model Comparison",
-        "Random Forest Feature Importance",
-        "Xgboost Feature Importance",
-        "Decision Tree Confusion Matrix"
-    ],
-    "M4": [
-        "Dbscan Cluster Distribution",
-        "Hierarchical Clustering Cluster Distribution",
-        "K-Means Cluster Distribution",
-        "K-Meansplusplus Cluster Distribution",
-        "Kmeans Pca Projection",
-        "Pca Explained Variance"
-    ]
-} %}
-
-{% for code, data in all_modules.items() %}
-
-{% if data.charts %}
-
-<section class="report-section">
-
-
-    <div class="report-section-heading">
-
-        <span class="section-label">
-            {{ code }}
+        <span class="module-number">
+            M5
         </span>
 
         <div>
 
             <h2>
-                Charts & Visualizations
+                Hyperparameter Tuning & Validation
             </h2>
+
+            <p>
+                Grid Search, Random Search, and Bayesian Optimization evaluated using 5-Fold Cross-Validation (k=5).
+            </p>
 
         </div>
 
     </div>
 
 
-    <div class="charts-grid">
+
+    <div class="report-steps">
 
 
-        {% for chart in data.charts if chart.title in selected_charts.get(code, []) %}
+        {% for step in modules["M5"].steps %}
 
-        <div class="chart-card">
+        <article class="report-step">
 
 
-            <div class="chart-header">
+            <div class="report-step-number">
+                {{ "%02d"|format(loop.index) }}
+            </div>
+
+
+            <div>
 
                 <h3>
-                    {{ chart.title }}
+                    {{ step.title }}
                 </h3>
+
+
+                {% if step.what %}
+
+                <h4>
+                    What is done?
+                </h4>
+
+                <p>
+                    {{ step.what }}
+                </p>
+
+                {% endif %}
+
+
+                {% if step.formula %}
+
+                <h4>
+                    Formula / Method
+                </h4>
+
+                <div class="formula-box">
+
+                    <code>
+                        {{ step.formula }}
+                    </code>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if step.understanding %}
+
+                <h4>
+                    Understanding
+                </h4>
+
+                <p>
+                    {{ step.understanding }}
+                </p>
+
+                {% endif %}
+
 
             </div>
 
 
-            <img
-                src="{{ url_for(
-                    'chart_file',
-                    code=code,
-                    filename=chart.filename
-                ) }}"
-                alt="{{ chart.title }}"
-                class="chart-image"
-            >
-
-
-        </div>
+        </article>
 
         {% endfor %}
 
@@ -769,9 +728,71 @@ PlacementPredict | Full Report
     </div>
 
 
+    </section>
+
+
+
+<!-- =====================================================
+     COMPLETE ALGORITHM REPORT
+     ===================================================== -->
+
+{% for code in ["M1", "M2", "M3", "M4", "M5"] %}
+<section class="report-section report-module-section">
+    <div class="report-section-heading">
+        <span class="section-label">{{ code }}</span>
+        <div>
+            <h2>{{ modules[code].name }} — Complete Algorithm Report</h2>
+            <p>Every algorithm follows Dataset Used → Calculation → Calculated Values → Visualization.</p>
+        </div>
+    </div>
+
+    {% for card in algorithm_cards[code] %}
+    <article class="result-card" style="margin-bottom:28px;">
+        <div class="result-card-header">
+            <h3>{{ loop.index }}. {{ card.algorithm }}</h3>
+            <span>{{ card.calculation_sample_size }} REAL ROWS</span>
+        </div>
+
+        <h4>1. Dataset Used</h4>
+        <p>{{ card.purpose }}</p>
+        <p>
+            Parameters/features: <strong>{{ card.parameter_count }}</strong>.
+            Displayed source records: <strong>{{ card.displayed_rows }}</strong>.
+            Calculation records: <strong>{{ card.calculation_sample_size }}</strong>.
+        </p>
+        <div class="table-container">
+            <table class="data-table">
+                <thead><tr>{% for c in card.source_columns %}<th>{{ c }}</th>{% endfor %}</tr></thead>
+                <tbody>{% for row in card.source_rows[:10] %}<tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+            </table>
+        </div>
+
+        <h4>2. Calculation</h4>
+        <div class="formula-box"><code>{{ card.formula }}</code></div>
+        <ol>{% for example in card.calculation_examples[:3] %}<li>{{ example }}</li>{% endfor %}</ol>
+
+        <h4>3. Calculated Values</h4>
+        {% if card.result_table and card.result_table.rows %}
+        <div class="table-container">
+            <table class="data-table">
+                <thead><tr>{% for c in card.result_table.columns %}<th>{{ c }}</th>{% endfor %}</tr></thead>
+                <tbody>{% for row in card.result_table.rows %}<tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        <h4>4. Visualization</h4>
+        <div class="charts-grid">
+            {% for filename in algorithm_chart_maps[code].get(card.algorithm, []) %}
+            <div class="chart-card">
+                <div class="chart-header"><h3>{{ filename.rsplit('.',1)[0].replace('_',' ').title() }}</h3></div>
+                <img src="{{ url_for('chart_file', code=code, filename=filename) }}" alt="{{ filename }}" class="chart-image">
+            </div>
+            {% endfor %}
+        </div>
+    </article>
+    {% endfor %}
 </section>
-
-{% endif %}
-
 {% endfor %}
+
 {% endblock %}

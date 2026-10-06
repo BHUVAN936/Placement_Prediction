@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -10,212 +8,517 @@
         content="width=device-width, initial-scale=1.0"
     >
 
+    <meta
+        name="description"
+        content="PlacementPredict - Machine Learning Based Placement Prediction"
+    >
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
     <title>
         {% block title %}
-        PlacementPredict
+            PlacementPredict
         {% endblock %}
     </title>
 
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='style.css') }}"
-    >
+    <style>
+        /* =========================================================
+           BASE / GLOBAL LAYOUT
+           ========================================================= */
 
+        :root {
+            --topbar-height: 72px;
+            --page-padding: 28px;
+            --nav-gap: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+
+        /* =========================================================
+           TOP NAVIGATION
+           ========================================================= */
+
+        .pp-topbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            width: 100%;
+            min-height: var(--topbar-height);
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 12px 24px;
+
+            background: rgba(255, 255, 255, 0.96);
+
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+
+        /* =========================================================
+           BRAND
+           ========================================================= */
+
+        .pp-brand {
+            display: inline-flex;
+            align-items: center;
+
+            text-decoration: none;
+
+            font-size: 1.2rem;
+            font-weight: 800;
+
+            white-space: nowrap;
+        }
+
+        .pp-brand-mark {
+            width: 38px;
+            height: 38px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            margin-right: 10px;
+
+            border-radius: 10px;
+
+            font-size: 0.95rem;
+            font-weight: 900;
+        }
+
+        .pp-brand-text {
+            line-height: 1;
+        }
+
+
+        /* =========================================================
+           MODULE NAVIGATION
+           ========================================================= */
+
+        .pp-module-nav {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+
+            gap: var(--nav-gap);
+
+            flex-wrap: wrap;
+        }
+
+        .pp-module-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 40px;
+
+            padding: 8px 14px;
+
+            border-radius: 9px;
+
+            text-decoration: none;
+
+            font-size: 0.92rem;
+            font-weight: 700;
+
+            transition:
+                background-color 0.2s ease,
+                color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .pp-module-link:hover {
+            transform: translateY(-1px);
+        }
+
+        .pp-module-link.active {
+            font-weight: 800;
+        }
+
+
+        /* =========================================================
+           REPORT LINK
+           ========================================================= */
+
+        .pp-report-link {
+            margin-left: 4px;
+        }
+
+
+        /* =========================================================
+           MAIN CONTENT
+           ========================================================= */
+
+        .pp-main {
+            width: 100%;
+            min-height: calc(100vh - var(--topbar-height));
+        }
+
+        .pp-container {
+            width: min(1500px, calc(100% - 40px));
+
+            margin: 0 auto;
+
+            padding: 28px 0 50px;
+        }
+
+
+        /* =========================================================
+           FOOTER
+           ========================================================= */
+
+        .pp-footer {
+            width: 100%;
+
+            padding: 24px;
+
+            text-align: center;
+
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+
+        /* =========================================================
+           PRINT
+           ========================================================= */
+
+        .pp-print-button {
+            position: fixed;
+
+            right: 22px;
+            bottom: 22px;
+
+            z-index: 900;
+
+            min-height: 42px;
+
+            padding: 9px 15px;
+
+            border: 0;
+            border-radius: 9px;
+
+            cursor: pointer;
+
+            font-weight: 700;
+
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.15);
+
+            transition:
+                transform 0.2s ease,
+                opacity 0.2s ease;
+        }
+
+        .pp-print-button:hover {
+            transform: translateY(-2px);
+        }
+
+
+        /* =========================================================
+           RESPONSIVE NAVIGATION
+           ========================================================= */
+
+        @media (max-width: 900px) {
+
+            .pp-topbar {
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                gap: 12px;
+
+                padding: 12px 18px;
+            }
+
+            .pp-module-nav {
+                width: 100%;
+
+                justify-content: flex-start;
+            }
+
+            .pp-main {
+                min-height: calc(100vh - 120px);
+            }
+
+            .pp-container {
+                width: min(100% - 24px, 1500px);
+
+                padding-top: 20px;
+            }
+        }
+
+
+        @media (max-width: 600px) {
+
+            .pp-topbar {
+                padding: 10px 12px;
+            }
+
+            .pp-module-nav {
+                gap: 5px;
+            }
+
+            .pp-module-link {
+                min-height: 36px;
+
+                padding: 7px 10px;
+
+                font-size: 0.82rem;
+            }
+
+            .pp-brand {
+                font-size: 1.05rem;
+            }
+
+            .pp-brand-mark {
+                width: 34px;
+                height: 34px;
+
+                margin-right: 8px;
+            }
+
+            .pp-container {
+                width: calc(100% - 16px);
+
+                padding: 16px 0 35px;
+            }
+
+            .pp-print-button {
+                right: 12px;
+                bottom: 12px;
+            }
+        }
+
+
+        /* =========================================================
+           PRINT MODE
+           ========================================================= */
+
+        @media print {
+
+            .pp-topbar {
+                position: static;
+
+                box-shadow: none;
+
+                background: white;
+            }
+
+            .pp-print-button {
+                display: none !important;
+            }
+
+            .pp-footer {
+                display: none;
+            }
+
+            .pp-main {
+                min-height: auto;
+            }
+
+            .pp-container {
+                width: 100%;
+
+                padding: 0;
+            }
+
+            a {
+                text-decoration: none !important;
+            }
+        }
+    </style>
+
+    {% block head %}
+    {% endblock %}
 </head>
 
 
 <body>
 
+    <!-- =========================================================
+         TOP NAVIGATION
+         Only modules are displayed here.
+         Submodules / algorithms are NOT placed in the topbar.
+         ========================================================= -->
 
-<div class="app-container">
-
-
-    <!-- ==================================================
-         SIDEBAR
-         ================================================== -->
-
-    <aside class="sidebar">
-
+    <header class="pp-topbar">
 
         <!-- BRAND -->
+        <a
+            href="{{ url_for('index') }}"
+            class="pp-brand"
+        >
+            <span class="pp-brand-mark">
+                PP
+            </span>
 
-        <div class="brand">
-
-            <div class="brand-icon">
-                P
-            </div>
-
-            <div>
-
-                <h2>
-                    PlacementPredict
-                </h2>
-
-                <span>
-                    ML System
-                </span>
-
-            </div>
-
-        </div>
+            <span class="pp-brand-text">
+                PlacementPredict
+            </span>
+        </a>
 
 
-        <!-- NAVIGATION -->
+        <!-- MODULE NAVIGATION -->
+        <nav
+            class="pp-module-nav"
+            aria-label="Main navigation"
+        >
 
-        <nav class="navigation">
-
-
-            <!-- DASHBOARD -->
-
+            <!-- HOME -->
             <a
                 href="{{ url_for('index') }}"
-                class="nav-link"
+                class="pp-module-link {% if request.endpoint == 'home' %}active{% endif %}"
             >
-
-                <span>
-                    ⌂
-                </span>
-
-                <span>
-                    Dashboard
-                </span>
-
+                Home
             </a>
 
 
-            <!-- MODULES + ALGORITHMS -->
-            {% for code, item in modules.items() %}
+            <!-- M1 -->
+            <a
+                href="{{ url_for('module_page', code='M1') }}"
+                class="pp-module-link {% if request.path.startswith('/m1') or request.path.startswith('/module/M1') %}active{% endif %}"
+            >
+                M1
+            </a>
 
-            <div class="module-nav-group">
-                <a href="{{ url_for('module_page', code=code) }}" class="nav-link">
-                    <span>{{ code }}</span>
-                    <span>{{ item.short_name }}</span>
-                </a>
 
-                <div class="algorithm-nav">
-                    {% for algorithm in algorithms.get(code, []) %}
-                    <a href="{{ url_for('module_page', code=code) }}#algorithm-{{ algorithm|replace(' ', '-')|replace('+', 'plus')|lower }}" class="algorithm-nav-link">
-                        <span>•</span><span>{{ algorithm }}</span>
-                    </a>
-                    {% endfor %}
-                </div>
-            </div>
+            <!-- M2 -->
+            <a
+                href="{{ url_for('module_page', code='M2') }}"
+                class="pp-module-link {% if request.path.startswith('/m2') or request.path.startswith('/module/M2') %}active{% endif %}"
+            >
+                M2
+            </a>
 
-            {% endfor %}
+
+            <!-- M3 -->
+            <a
+                href="{{ url_for('module_page', code='M3') }}"
+                class="pp-module-link {% if request.path.startswith('/m3') or request.path.startswith('/module/M3') %}active{% endif %}"
+            >
+                M3
+            </a>
+
+
+            <!-- M4 -->
+            <a
+                href="{{ url_for('module_page', code='M4') }}"
+                class="pp-module-link {% if request.path.startswith('/m4') or request.path.startswith('/module/M4') %}active{% endif %}"
+            >
+                M4
+            </a>
+
+
+            <!-- M5 -->
+            <a
+                href="{{ url_for('module_page', code='M5') }}"
+                class="pp-module-link {% if request.path.startswith('/m5') or request.path.startswith('/module/M5') %}active{% endif %}"
+            >
+                M5
+            </a>
 
 
             <!-- FULL REPORT -->
-
             <a
                 href="{{ url_for('full_report') }}"
-                class="nav-link"
+                class="pp-module-link pp-report-link {% if request.endpoint == 'full_report' %}active{% endif %}"
             >
-
-                <span>
-                    R
-                </span>
-
-                <span>
-                    Full Report
-                </span>
-
+                Full Report
             </a>
-
 
         </nav>
 
-
-        <!-- SIDEBAR FOOTER -->
-
-        <div class="sidebar-footer">
-
-            <div class="dataset-mini">
-
-                <strong>
-                    Dataset
-                </strong>
-
-                <span>
-                    Placement Prediction
-                </span>
-
-            </div>
-
-        </div>
+    </header>
 
 
-    </aside>
+    <!-- =========================================================
+         MAIN PAGE CONTENT
+         ========================================================= -->
 
+    <main class="pp-main">
 
-    <!-- ==================================================
-         MAIN CONTENT
-         ================================================== -->
-
-    <main class="main-content">
-
-
-        <!-- TOP BAR -->
-
-        <header class="topbar">
-
-
-            <div>
-
-                <h1>
-                    PlacementPredict
-                </h1>
-
-                <p>
-                    Placement Prediction & Analytics
-                </p>
-
-            </div>
-
-
-            <div class="topbar-actions">
-
-                <button
-                    type="button"
-                    class="print-button"
-                    onclick="window.print()"
-                >
-
-                    Print Report
-
-                </button>
-
-            </div>
-
-
-        </header>
-
-
-        <!-- PAGE -->
-
-        <div class="page-content">
+        <div class="pp-container">
 
             {% block content %}
-
             {% endblock %}
 
         </div>
 
-
-        <!-- FOOTER -->
-
-        <footer>
-
-            PlacementPredict ML System
-
-        </footer>
-
-
     </main>
 
 
-</div>
+    <!-- =========================================================
+         FOOTER
+         ========================================================= -->
 
+    <footer class="pp-footer">
+
+        {% block footer %}
+
+        <div>
+            <strong>PlacementPredict</strong>
+        </div>
+
+        <div>
+            Machine Learning Based Placement Prediction
+        </div>
+
+        {% endblock %}
+
+    </footer>
+
+
+    <!-- =========================================================
+         PRINT BUTTON
+         ========================================================= -->
+
+    <button
+        type="button"
+        class="pp-print-button"
+        onclick="window.print()"
+        aria-label="Print or save report"
+    >
+        Print / Save PDF
+    </button>
+
+
+    <script>
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p') {
+            if (!window.location.pathname.includes('/full-report')) {
+                e.preventDefault();
+                window.location.href = "{{ url_for('full_report') }}?print=1";
+            }
+        }
+    });
+    if (window.location.search.includes('print=1')) {
+        window.addEventListener('load', function() {
+            setTimeout(function() { window.print(); }, 600);
+        });
+    }
+    </script>
+
+    {% block scripts %}
+    {% endblock %}
 
 </body>
-
 </html>

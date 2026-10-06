@@ -1,0 +1,221 @@
+{
+    "Holdout Validation": {
+        "algorithm": "Holdout Validation",
+        "train_size": 40,
+        "test_size": 10,
+        "train_accuracy": 100.0,
+        "test_accuracy": 90.0,
+        "precision": 0.875,
+        "recall": 1.0,
+        "f1_score": 0.9333,
+        "roc_auc": 0.9524,
+        "formula": "Training Data = 80% N | Testing Data = 20% N; Test Accuracy = Correct / Total_Test",
+        "explanation": "Holdout Validation splits the dataset into 40 training rows (80%) and 10 validation rows (20%). It achieves 90.0% accuracy on unseen test data."
+    },
+    "5-Fold Cross Validation": {
+        "algorithm": "5-Fold Cross Validation",
+        "k": 5,
+        "fold_scores": [
+            70.0,
+            80.0,
+            80.0,
+            90.0,
+            90.0
+        ],
+        "mean_accuracy": 82.0,
+        "std_deviation": 7.48,
+        "fold_details": [
+            {
+                "Fold": 1,
+                "Train_Samples": 40,
+                "Val_Samples": 10,
+                "Accuracy_Score": 70.0
+            },
+            {
+                "Fold": 2,
+                "Train_Samples": 40,
+                "Val_Samples": 10,
+                "Accuracy_Score": 80.0
+            },
+            {
+                "Fold": 3,
+                "Train_Samples": 40,
+                "Val_Samples": 10,
+                "Accuracy_Score": 80.0
+            },
+            {
+                "Fold": 4,
+                "Train_Samples": 40,
+                "Val_Samples": 10,
+                "Accuracy_Score": 90.0
+            },
+            {
+                "Fold": 5,
+                "Train_Samples": 40,
+                "Val_Samples": 10,
+                "Accuracy_Score": 90.0
+            }
+        ],
+        "formula": "Mean CV Score = (1/k) * Sum(Fold_i Score); Std Dev = sqrt((1/k) * Sum((S_i - Mean)^2))",
+        "explanation": "5-Fold Cross-Validation (k=5) partitions data into 5 equal folds. Each fold acts as validation while remaining folds train the model. Mean CV score: 82.0% +/- 7.48%."
+    },
+    "Probability Calibration": {
+        "algorithm": "Probability Calibration",
+        "brier_score_before": 0.1489,
+        "brier_score_after": 0.1427,
+        "brier_improvement": 0.0062,
+        "calibration_method": "Sigmoid Platt Scaling",
+        "calibration_samples": 15,
+        "calibration_details": [
+            {
+                "Sample": 1,
+                "Actual_Class": 1,
+                "Uncalibrated_Prob": 1.0,
+                "Calibrated_Prob": 0.8743,
+                "Diff": -0.1257
+            },
+            {
+                "Sample": 2,
+                "Actual_Class": 0,
+                "Uncalibrated_Prob": 0.46,
+                "Calibrated_Prob": 0.5796,
+                "Diff": 0.1196
+            },
+            {
+                "Sample": 3,
+                "Actual_Class": 1,
+                "Uncalibrated_Prob": 0.52,
+                "Calibrated_Prob": 0.587,
+                "Diff": 0.067
+            },
+            {
+                "Sample": 4,
+                "Actual_Class": 1,
+                "Uncalibrated_Prob": 0.66,
+                "Calibrated_Prob": 0.6494,
+                "Diff": -0.0106
+            },
+            {
+                "Sample": 5,
+                "Actual_Class": 0,
+                "Uncalibrated_Prob": 0.36,
+                "Calibrated_Prob": 0.4584,
+                "Diff": 0.0984
+            },
+            {
+                "Sample": 6,
+                "Actual_Class": 1,
+                "Uncalibrated_Prob": 0.32,
+                "Calibrated_Prob": 0.501,
+                "Diff": 0.181
+            },
+            {
+                "Sample": 7,
+                "Actual_Class": 1,
+                "Uncalibrated_Prob": 1.0,
+                "Calibrated_Prob": 0.8743,
+                "Diff": -0.1257
+            },
+            {
+                "Sample": 8,
+                "Actual_Class": 0,
+                "Uncalibrated_Prob": 0.74,
+                "Calibrated_Prob": 0.7052,
+                "Diff": -0.0348
+            },
+            {
+                "Sample": 9,
+                "Actual_Class": 1,
+                "Uncalibrated_Prob": 1.0,
+                "Calibrated_Prob": 0.8743,
+                "Diff": -0.1257
+            },
+            {
+                "Sample": 10,
+                "Actual_Class": 1,
+                "Uncalibrated_Prob": 0.92,
+                "Calibrated_Prob": 0.8422,
+                "Diff": -0.0778
+            }
+        ],
+        "formula": "Brier Score = (1/N) * Sum((p_i - y_i)^2)",
+        "explanation": "Probability Calibration refines raw classifier outputs into reliable probabilities. Brier Loss improved from 0.1489 to 0.1427."
+    },
+    "ROC-AUC Analysis": {
+        "algorithm": "ROC-AUC Analysis",
+        "roc_auc_score": 0.8182,
+        "optimal_threshold": 0.9,
+        "confusion_matrix": [
+            [
+                3,
+                1
+            ],
+            [
+                2,
+                9
+            ]
+        ],
+        "roc_curve_samples": [
+            {
+                "Threshold": Infinity,
+                "FPR": 0.0,
+                "TPR": 0.0
+            },
+            {
+                "Threshold": 1.0,
+                "FPR": 0.0,
+                "TPR": 0.3636
+            },
+            {
+                "Threshold": 0.9,
+                "FPR": 0.0,
+                "TPR": 0.6364
+            },
+            {
+                "Threshold": 0.74,
+                "FPR": 0.25,
+                "TPR": 0.6364
+            },
+            {
+                "Threshold": 0.52,
+                "FPR": 0.25,
+                "TPR": 0.8182
+            },
+            {
+                "Threshold": 0.36,
+                "FPR": 0.75,
+                "TPR": 0.8182
+            },
+            {
+                "Threshold": 0.28,
+                "FPR": 0.75,
+                "TPR": 1.0
+            },
+            {
+                "Threshold": 0.04,
+                "FPR": 1.0,
+                "TPR": 1.0
+            }
+        ],
+        "formula": "FPR = FP / (FP + TN); TPR = TP / (TP + FN); AUC = Area under ROC Curve",
+        "explanation": "ROC-AUC evaluates classification performance across all probability thresholds. Achieved ROC-AUC score: 0.8182 with optimal decision threshold at 0.9."
+    },
+    "Grid Search": {
+        "best_x": 10.0,
+        "best_y": 5.0,
+        "best_score": 87.1651,
+        "ml_cv_accuracy": 0.908
+    },
+    "Random Search": {
+        "best_x": 14.0053,
+        "best_y": 6.2473,
+        "best_score": 94.039,
+        "ml_cv_accuracy": 0.9075
+    },
+    "Bayesian Optimization": {
+        "best_x": 12.3232,
+        "best_y": 7.8788,
+        "best_score": 99.9689,
+        "ml_cv_accuracy": 0.911
+    }
+}

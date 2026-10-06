@@ -1,0 +1,8 @@
+Algorithm,Best_X,Best_Y,Benchmark_Score,ML_CV_Accuracy,Evaluations,CV_Folds,Limitation_or_Advantage
+Holdout Validation,-,-,90.0,0.9,1,1,80/20 train-test split
+5-Fold Cross Validation,-,-,82.0,0.82,5,5,"k=5 folds, mean accuracy 82.0%"
+Probability Calibration,-,-,0.1427,0.8573,1,1,"Sigmoid Platt scaling, Brier loss 0.1427"
+ROC-AUC Analysis,-,-,81.82000000000001,0.8182,1,1,"Optimal threshold 0.9, AUC 0.8182"
+Grid Search,10.0,5.0,87.1651,0.908,25,5,"Trapped in rigid grid step bounds [0, 5, 10, 15, 20]; missed peak"
+Random Search,14.0053,6.2473,94.039,0.9075,25,5,Random uniform continuous sampling; landed near peak (95-99%)
+Bayesian Optimization,12.3232,7.8788,99.9689,0.911,25,5,"Gaussian Process mapped slope; pinned peak at (12.29, 7.80) with 99.99+ score"

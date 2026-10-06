@@ -1,794 +1,1008 @@
 {% extends "base.html" %}
 
 {% block title %}
-{{ module.code }} | {{ module.name }} | PlacementPredict
+    {{ module.name }} | PlacementPredict
+{% endblock %}
+
+
+{% block head %}
+
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+<style>
+
+    /* =========================================================
+       MODULE PAGE
+       ========================================================= */
+
+    .module-page {
+        width: 100%;
+    }
+
+
+    /* =========================================================
+       HERO
+       ========================================================= */
+
+    .module-hero {
+        position: relative;
+
+        overflow: hidden;
+
+        padding: 34px;
+
+        margin-bottom: 24px;
+
+        border-radius: 22px;
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(255,255,255,0.98),
+                rgba(245,247,250,0.98)
+            );
+
+        border: 1px solid rgba(0,0,0,0.08);
+
+        box-shadow:
+            0 10px 35px rgba(0,0,0,0.07);
+    }
+
+    .module-hero::after {
+        content: "";
+
+        position: absolute;
+
+        width: 240px;
+        height: 240px;
+
+        right: -80px;
+        top: -90px;
+
+        border-radius: 50%;
+
+        background: rgba(0,0,0,0.025);
+
+        pointer-events: none;
+    }
+
+    .module-label {
+        display: inline-flex;
+
+        align-items: center;
+
+        padding: 7px 12px;
+
+        margin-bottom: 13px;
+
+        border-radius: 999px;
+
+        font-size: 0.78rem;
+        font-weight: 800;
+
+        letter-spacing: 0.04em;
+
+        text-transform: uppercase;
+    }
+
+    .module-title {
+        margin: 0;
+
+        font-size: clamp(
+            2rem,
+            4vw,
+            3rem
+        );
+
+        line-height: 1.05;
+
+        font-weight: 900;
+    }
+
+    .module-subtitle {
+        margin: 12px 0 0;
+
+        max-width: 900px;
+
+        font-size: 1.08rem;
+
+        line-height: 1.6;
+
+        opacity: 0.78;
+    }
+
+    .module-description {
+        margin: 16px 0 0;
+
+        max-width: 1000px;
+
+        line-height: 1.75;
+
+        opacity: 0.8;
+    }
+
+
+    /* =========================================================
+       DATASET STATISTICS
+       ========================================================= */
+
+    .dataset-stats {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                4,
+                minmax(0, 1fr)
+            );
+
+        gap: 14px;
+
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        padding: 20px;
+
+        border-radius: 16px;
+
+        border: 1px solid rgba(0,0,0,0.08);
+
+        background: rgba(255,255,255,0.96);
+
+        box-shadow:
+            0 5px 18px rgba(0,0,0,0.05);
+    }
+
+    .stat-label {
+        margin-bottom: 7px;
+
+        font-size: 0.78rem;
+
+        font-weight: 700;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.04em;
+
+        opacity: 0.65;
+    }
+
+    .stat-value {
+        font-size: 1.7rem;
+
+        font-weight: 900;
+    }
+
+
+    /* =========================================================
+       SECTION
+       ========================================================= */
+
+    .dashboard-section {
+        margin-bottom: 30px;
+    }
+
+    .section-heading {
+        margin: 0 0 7px;
+
+        font-size: 1.55rem;
+
+        font-weight: 900;
+    }
+
+    .section-description {
+        margin: 0 0 18px;
+
+        line-height: 1.65;
+
+        opacity: 0.72;
+    }
+
+
+    /* =========================================================
+       THREE FEATURE SAMPLE
+       ========================================================= */
+
+    .sample-card {
+        overflow: hidden;
+
+        border-radius: 18px;
+
+        border: 1px solid rgba(0,0,0,0.08);
+
+        background: rgba(255,255,255,0.98);
+
+        box-shadow:
+            0 7px 25px rgba(0,0,0,0.06);
+    }
+
+    .sample-card-header {
+        display: flex;
+
+        justify-content: space-between;
+        align-items: center;
+
+        gap: 15px;
+
+        padding: 20px 22px;
+
+        border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+
+    .sample-card-title {
+        margin: 0;
+
+        font-size: 1.1rem;
+
+        font-weight: 900;
+    }
+
+    .sample-badge {
+        flex-shrink: 0;
+
+        padding: 6px 10px;
+
+        border-radius: 999px;
+
+        font-size: 0.74rem;
+
+        font-weight: 800;
+    }
+
+    .sample-card-description {
+        margin: 0;
+
+        padding: 0 22px 18px;
+
+        line-height: 1.6;
+
+        opacity: 0.7;
+    }
+
+    .sample-table-wrapper {
+        width: 100%;
+
+        overflow-x: auto;
+    }
+
+    .sample-table {
+        width: 100%;
+
+        border-collapse: collapse;
+
+        min-width: 600px;
+    }
+
+    .sample-table th,
+    .sample-table td {
+        padding: 13px 18px;
+
+        text-align: left;
+
+        border-top: 1px solid rgba(0,0,0,0.07);
+    }
+
+    .sample-table th {
+        font-size: 0.82rem;
+
+        font-weight: 900;
+
+        white-space: nowrap;
+    }
+
+    .sample-table td {
+        font-size: 0.9rem;
+    }
+
+    .sample-table tbody tr {
+        transition:
+            background-color 0.18s ease;
+    }
+
+    .sample-table tbody tr:hover {
+        background: rgba(0,0,0,0.025);
+    }
+
+    .sample-row-number {
+        width: 60px;
+
+        font-weight: 800;
+
+        opacity: 0.55;
+    }
+
+
+    /* =========================================================
+       MODULE STEPS
+       ========================================================= */
+
+    .step-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                auto-fit,
+                minmax(180px, 1fr)
+            );
+
+        gap: 12px;
+    }
+
+    .step-card {
+        min-height: 100px;
+
+        padding: 18px;
+
+        border-radius: 15px;
+
+        border: 1px solid rgba(0,0,0,0.08);
+
+        background: rgba(255,255,255,0.96);
+
+        box-shadow:
+            0 4px 15px rgba(0,0,0,0.04);
+    }
+
+    .step-number {
+        display: inline-flex;
+
+        width: 30px;
+        height: 30px;
+
+        align-items: center;
+        justify-content: center;
+
+        margin-bottom: 10px;
+
+        border-radius: 8px;
+
+        font-size: 0.8rem;
+
+        font-weight: 900;
+    }
+
+    .step-name {
+        font-weight: 800;
+
+        line-height: 1.4;
+    }
+
+
+    /* =========================================================
+       ALGORITHM INDEX
+       ========================================================= */
+
+    .algorithm-index {
+        display: flex;
+
+        flex-wrap: wrap;
+
+        gap: 8px;
+
+        margin-bottom: 22px;
+    }
+
+    .algorithm-index a {
+        display: inline-flex;
+
+        padding: 8px 12px;
+
+        border-radius: 8px;
+
+        text-decoration: none;
+
+        font-size: 0.82rem;
+
+        font-weight: 700;
+
+        border: 1px solid rgba(0,0,0,0.08);
+
+        background: rgba(255,255,255,0.9);
+    }
+
+
+    /* =========================================================
+       ALGORITHM CARD
+       ========================================================= */
+
+    .algorithm-card {
+        margin-bottom: 24px;
+
+        overflow: hidden;
+
+        border-radius: 20px;
+
+        border: 1px solid rgba(0,0,0,0.08);
+
+        background: rgba(255,255,255,0.98);
+
+        box-shadow:
+            0 8px 28px rgba(0,0,0,0.055);
+    }
+
+    .algorithm-header {
+        display: flex;
+
+        justify-content: space-between;
+        align-items: flex-start;
+
+        gap: 20px;
+
+        padding: 23px 25px;
+
+        border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+
+    .algorithm-number {
+        flex-shrink: 0;
+
+        display: inline-flex;
+
+        width: 38px;
+        height: 38px;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 10px;
+
+        font-size: 0.85rem;
+
+        font-weight: 900;
+    }
+
+    .algorithm-heading-group {
+        flex: 1;
+    }
+
+    .algorithm-name {
+        margin: 0;
+
+        font-size: 1.35rem;
+
+        font-weight: 900;
+    }
+
+    .algorithm-short-description {
+        margin: 7px 0 0;
+
+        line-height: 1.55;
+
+        opacity: 0.7;
+    }
+
+
+    /* =========================================================
+       EXPLANATION + CALCULATION
+       ========================================================= */
+
+    .algorithm-body {
+        padding: 24px 25px;
+    }
+
+    .algorithm-content-grid {
+        display: grid;
+
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(0, 1fr);
+
+        gap: 22px;
+
+        margin-bottom: 24px;
+    }
+
+    .info-box {
+        padding: 19px;
+
+        border-radius: 14px;
+
+        border: 1px solid rgba(0,0,0,0.07);
+
+        background: rgba(248,249,251,0.9);
+    }
+
+    .info-box-title {
+        margin: 0 0 9px;
+
+        font-size: 0.82rem;
+
+        font-weight: 900;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.04em;
+    }
+
+    .info-box-text {
+        margin: 0;
+
+        line-height: 1.7;
+
+        white-space: pre-line;
+
+        opacity: 0.78;
+    }
+
+    .calculation-box {
+        font-family:
+            "Consolas",
+            "Courier New",
+            monospace;
+
+        white-space: pre-wrap;
+
+        line-height: 1.65;
+    }
+
+
+    /* =========================================================
+       M4 CONCEPT / EXAMPLE
+       ========================================================= */
+
+    .algorithm-extra {
+        display: grid;
+
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(0, 1fr);
+
+        gap: 18px;
+
+        margin-bottom: 24px;
+    }
+
+
+    /* =========================================================
+       VISUALIZATION AREA
+       ========================================================= */
+
+    .visualization-section {
+        padding-top: 4px;
+    }
+
+    .visualization-heading {
+        margin: 0 0 14px;
+
+        font-size: 1rem;
+
+        font-weight: 900;
+    }
+
+    .chart-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                auto-fit,
+                minmax(320px, 1fr)
+            );
+
+        gap: 18px;
+    }
+
+    .chart-card {
+        overflow: hidden;
+
+        border-radius: 15px;
+
+        border: 1px solid rgba(0,0,0,0.08);
+
+        background: #fff;
+    }
+
+    .chart-card-header {
+        padding: 13px 15px;
+
+        border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+
+    .chart-title {
+        margin: 0;
+
+        font-size: 0.9rem;
+
+        font-weight: 850;
+    }
+
+    .chart-image-wrapper {
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        width: 100%;
+
+        min-height: 250px;
+
+        padding: 12px;
+
+        background: rgba(0,0,0,0.015);
+    }
+
+    .chart-image {
+        display: block;
+
+        width: 100%;
+
+        max-height: 600px;
+
+        object-fit: contain;
+    }
+
+    .no-chart {
+        padding: 30px 20px;
+
+        text-align: center;
+
+        opacity: 0.6;
+
+        font-size: 0.9rem;
+    }
+
+
+    /* =========================================================
+       EUCLIDEAN EXAMPLE
+       ========================================================= */
+
+    .distance-card {
+        padding: 20px;
+
+        margin-top: 20px;
+
+        border-radius: 16px;
+
+        border: 1px solid rgba(0,0,0,0.08);
+
+        background: rgba(255,255,255,0.96);
+    }
+
+    .distance-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
+
+        gap: 12px;
+    }
+
+    .distance-item {
+        padding: 14px;
+
+        border-radius: 12px;
+
+        background: rgba(0,0,0,0.025);
+    }
+
+    .distance-label {
+        margin-bottom: 6px;
+
+        font-size: 0.76rem;
+
+        font-weight: 800;
+
+        text-transform: uppercase;
+
+        opacity: 0.65;
+    }
+
+    .distance-value {
+        font-family:
+            "Consolas",
+            "Courier New",
+            monospace;
+
+        font-size: 0.9rem;
+
+        font-weight: 700;
+
+        word-break: break-word;
+    }
+
+
+    /* =========================================================
+       EMPTY STATE
+       ========================================================= */
+
+    .empty-state {
+        padding: 35px;
+
+        text-align: center;
+
+        border-radius: 16px;
+
+        border: 1px dashed rgba(0,0,0,0.16);
+
+        opacity: 0.7;
+    }
+
+
+    /* =========================================================
+       MODULE COLOR THEMES
+       ========================================================= */
+
+    .theme-m1 .module-label,
+    .theme-m1 .sample-badge,
+    .theme-m1 .step-number,
+    .theme-m1 .algorithm-number {
+        background: rgba(52, 152, 219, 0.12);
+    }
+
+    .theme-m2 .module-label,
+    .theme-m2 .sample-badge,
+    .theme-m2 .step-number,
+    .theme-m2 .algorithm-number {
+        background: rgba(46, 204, 113, 0.12);
+    }
+
+    .theme-m3 .module-label,
+    .theme-m3 .sample-badge,
+    .theme-m3 .step-number,
+    .theme-m3 .algorithm-number {
+        background: rgba(155, 89, 182, 0.12);
+    }
+
+    .theme-m4 .module-label,
+    .theme-m4 .sample-badge,
+    .theme-m4 .step-number,
+    .theme-m4 .algorithm-number {
+        background: rgba(230, 126, 34, 0.12);
+    }
+
+    .theme-m5 .module-label,
+    .theme-m5 .sample-badge,
+    .theme-m5 .step-number,
+    .theme-m5 .algorithm-number {
+        background: rgba(231, 76, 60, 0.12);
+    }
+
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @media (max-width: 900px) {
+
+        .dataset-stats {
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(0, 1fr)
+                );
+        }
+
+        .algorithm-content-grid,
+        .algorithm-extra {
+            grid-template-columns: 1fr;
+        }
+
+        .distance-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .module-hero {
+            padding: 26px;
+        }
+    }
+
+
+    @media (max-width: 600px) {
+
+        .dataset-stats {
+            grid-template-columns: 1fr;
+        }
+
+        .module-hero {
+            padding: 22px;
+
+            border-radius: 16px;
+        }
+
+        .module-title {
+            font-size: 2rem;
+        }
+
+        .module-subtitle {
+            font-size: 0.98rem;
+        }
+
+        .algorithm-header {
+            padding: 18px;
+        }
+
+        .algorithm-body {
+            padding: 18px;
+        }
+
+        .algorithm-content-grid {
+            gap: 13px;
+        }
+
+        .chart-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .chart-image-wrapper {
+            min-height: 180px;
+        }
+
+        .sample-card-header {
+            align-items: flex-start;
+
+            flex-direction: column;
+        }
+    }
+
+
+    /* =========================================================
+       PRINT
+       ========================================================= */
+
+    @media print {
+
+        .algorithm-card {
+            break-inside: avoid;
+            page-break-inside: avoid;
+
+            box-shadow: none;
+        }
+
+        .chart-card {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        .module-hero {
+            box-shadow: none;
+        }
+
+        .sample-card {
+            box-shadow: none;
+        }
+    }
+
+</style>
+
 {% endblock %}
 
 
 {% block content %}
 
+<div class="module-page">
 
-<!-- =====================================================
-     MODULE HERO
-     ===================================================== -->
+    <section class="module-hero">
+        <div class="module-label">{{ module.code }}</div>
+        <h1 class="module-title">{{ module.name }}</h1>
+        <p class="module-subtitle">{{ module.description }}</p>
+        <p class="module-description">{{ module.purpose }}</p>
+    </section>
 
-<section class="module-hero">
-
-    <div>
-
-        <span class="eyebrow">
-            {{ module.code }}
-        </span>
-
-        <h1>
-            {{ module.name }}
-        </h1>
-
-        <p>
-            {{ module.description }}
-        </p>
-
-    </div>
-
-
-    <div class="module-purpose-box">
-
-        <span>
-            PURPOSE
-        </span>
-
-        <strong>
-            {{ module.purpose }}
-        </strong>
-
-    </div>
-
-</section>
-
-
-<!-- ALGORITHM INDEX -->
-<section class="section algorithm-index-panel">
-    <div class="section-heading">
-        <div>
-            <span class="section-label">ALGORITHM INDEX</span>
-            <h2>{{ module.code }} algorithms</h2>
+    <section class="dashboard-section">
+        <div class="dataset-stats">
+            <div class="stat-card"><div class="stat-label">Dataset Rows</div><div class="stat-value">{{ "{:,}".format(dataset_info.rows) }}</div></div>
+            <div class="stat-card"><div class="stat-label">Original Features</div><div class="stat-value">{{ dataset_info.columns }}</div></div>
+            <div class="stat-card"><div class="stat-label">Calculation Rows</div><div class="stat-value">50–100</div></div>
+            <div class="stat-card"><div class="stat-label">Display Rows / Algorithm</div><div class="stat-value">20</div></div>
         </div>
-        <p>Choose an algorithm to jump directly to its from-scratch explanation and dataset example.</p>
-    </div>
-    <div class="algorithm-index-grid">
-        {% for algorithm in algorithms.get(module.code, []) %}
-        <a href="#algorithm-{{ algorithm|replace(' ', '-')|replace('+', 'plus')|lower }}" class="algorithm-index-item">
-            <span>{{ "%02d"|format(loop.index) }}</span>
-            <strong>{{ algorithm }}</strong>
-        </a>
-        {% endfor %}
-    </div>
-</section>
+    </section>
 
+    {% for card in algorithm_cards %}
+    {% set charts_for_algorithm = algorithm_chart_map.get(card.algorithm, []) %}
+    <section class="algorithm-card" id="algorithm-{{ loop.index }}">
 
-<!-- =====================================================
-     QUICK UNDERSTANDING
-     ===================================================== -->
-
-<section class="section">
-
-
-    <div class="section-heading">
-
-        <div>
-
-            <span class="section-label">
-                QUICK UNDERSTANDING
-            </span>
-
-            <h2>
-                What this module does
-            </h2>
-
+        <div class="algorithm-header">
+            <div class="algorithm-number">{{ loop.index }}</div>
+            <div class="algorithm-heading-group">
+                <h2 class="algorithm-name">{{ card.algorithm }}</h2>
+                <p class="algorithm-short-description">{{ card.purpose }}</p>
+            </div>
         </div>
 
-    </div>
+        <div class="algorithm-body">
 
-
-    <div class="quick-grid">
-
-
-        <div class="quick-card">
-
-            <span>
-                INPUT
-            </span>
-
-            <h3>
-                Dataset Features
-            </h3>
-
-            <p>
-                The module uses the required features from
-                the Placement Prediction dataset as input.
-            </p>
-
-        </div>
-
-
-        <div class="quick-card">
-
-            <span>
-                PROCESS
-            </span>
-
-            <h3>
-                {{ module.name }}
-            </h3>
-
-            <p>
-                The data passes through the algorithms and
-                processing steps defined for this module.
-            </p>
-
-        </div>
-
-
-        <div class="quick-card">
-
-            <span>
-                OUTPUT
-            </span>
-
-            <h3>
-                Results
-            </h3>
-
-            <p>
-                The module produces calculated values,
-                model results, metrics and visualizations.
-            </p>
-
-        </div>
-
-
-    </div>
-
-</section>
-
-
-
-<!-- =====================================================
-     WORKED EXAMPLES
-     ===================================================== -->
-
-{% if examples %}
-
-<section class="section">
-
-    <div class="section-heading">
-
-        <div>
-            <span class="section-label">
-                DATASET-BASED EXAMPLES
-            </span>
-            <h2>
-                Worked Examples
-            </h2>
-        </div>
-
-        <p>
-            These examples use values calculated from the
-            project dataset/sample.
-        </p>
-
-    </div>
-
-    <div class="example-grid">
-
-        {% for example in examples %}
-
-        <article class="example-card">
-
-            <div class="example-header">
-                <span class="example-number">
-                    Example {{ loop.index }}
-                </span>
-                <h3>{{ example["title"] }}</h3>
-            </div>
-
-            {% if example.get("sgpa_values") %}
-            <div class="example-block">
-                <span>INPUT</span>
-                <pre>SGPA values: {{ example["sgpa_values"] }}</pre>
-            </div>
-            <div class="formula-box">
-                <span>CALCULATION</span>
-                <code>Average SGPA = (sum of 8 semester SGPAs) / 8 = {{ example["average_sgpa"] }}</code>
-            </div>
-            <div class="result-box">
-                <span>RESULT</span>
-                <strong>{{ example["average_sgpa"] }}</strong>
-            </div>
-            {% endif %}
-
-            {% if example.get("counts") %}
-            <div class="example-block">
-                <span>INPUT</span>
-                <pre>PlacementStatus counts: {{ example["counts"] }}</pre>
-            </div>
-            <div class="formula-box">
-                <span>FORMULA</span>
-                <code>Gini = 1 - Sum(p_i^2)</code>
-            </div>
-            <div class="result-box">
-                <span>RESULT</span>
-                <strong>Gini = {{ example["gini"] }}</strong>
-            </div>
-            {% endif %}
-
-            {% if example.get("distance") is not none %}
-            <div class="example-block">
-                <span>INPUT</span>
-                <pre>Student 1: CGPA={{ example["cgpa1"] }}, Attendance={{ example["attendance1"] }}
-Student 2: CGPA={{ example["cgpa2"] }}, Attendance={{ example["attendance2"] }}</pre>
-            </div>
-            <div class="formula-box">
-                <span>FORMULA</span>
-                <code>d = sqrt((CGPA1-CGPA2)^2 + (Attendance1-Attendance2)^2)</code>
-            </div>
-            <div class="result-box">
-                <span>RESULT</span>
-                <strong>{{ example["distance"] }}</strong>
-            </div>
-            {% endif %}
-
-        </article>
-
-        {% endfor %}
-
-    </div>
-
-</section>
-
-{% endif %}
-
-
-<!-- =====================================================
-     ALGORITHM-SPECIFIC EXPLANATION
-     ===================================================== -->
-
-{% if algorithm_details %}
-<section class="section">
-    <div class="section-heading">
-        <div>
-            <span class="section-label">ALGORITHM-SPECIFIC EXPLANATION</span>
-            <h2>How each algorithm works on this dataset</h2>
-        </div>
-        <p>Every example below uses values from the supplied 50,000-row, 32-column source dataset. No synthetic student data is introduced.</p>
-    </div>
-
-    <div class="process-list">
-        {% for item in algorithm_details %}
-        <article class="process-card algorithm-card" id="algorithm-{{ item.algorithm|replace(' ', '-')|replace('+', 'plus')|lower }}">
-            <div class="process-number">{{ "%02d"|format(loop.index) }}</div>
-            <div class="process-content">
-                <div class="process-title">
-                    <span>{{ module.code }} · ALGORITHM {{ loop.index }}</span>
-                    <h3>{{ item.algorithm }}</h3>
-                </div>
-                <div class="process-section">
-                    <h4>What it does</h4>
-                    <p>{{ item.purpose }}</p>
-                </div>
-                {% if item.data %}
-                <div class="process-section">
-                    <h4>Actual source-data example</h4>
-                    <div class="table-container">
-                        <table class="data-table">
-                            <tbody>
-                            {% for row in item.data %}
-                                <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
+            <div class="info-box" style="margin-bottom:22px;">
+                <h3 class="info-box-title">1. Dataset Used</h3>
+                <p class="info-box-text">
+                    Real records from <strong>placement_predict_50k Dataset (2).csv</strong>.
+                    This algorithm uses <strong>{{ card.parameter_count }}</strong> source parameters/features.
+                    The calculation sample contains <strong>{{ card.calculation_sample_size }}</strong> real rows;
+                    the table below displays <strong>{{ card.displayed_rows }}</strong> real rows only.
+                </p>
+                {% if module.code == 'M4' and card.algorithm in ['K-Means','K-Means++','Hierarchical Clustering','DBSCAN','UMAP','t-SNE','Euclidean Distance'] %}
+                <p class="info-box-text"><strong>M4 input features:</strong> 28 numeric features from the 50,000-row engineered dataset, after excluding <strong>PlacementStatus</strong> and <strong>Salary Package</strong>. The same 28-dimensional matrix is used for the UMAP and t-SNE calculations.</p>
+                {% endif %}
+                <div class="sample-table-wrapper" style="margin-top:14px;max-height:420px;overflow:auto;">
+                    <table class="sample-table">
+                        <thead>
+                            <tr>
+                                {% for column in card.source_columns %}<th>{{ column }}</th>{% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in card.source_rows %}
+                            <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
                             {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                {% endif %}
-                <div class="process-section">
-                    <h4>Clear interpretation</h4>
-                    <p>{{ item.result }}</p>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </article>
-        {% endfor %}
-    </div>
-</section>
-{% endif %}
 
-
-<!-- =====================================================
-     COMPLETE PROCESS
-     ===================================================== -->
-
-<section class="section">
-
-
-    <div class="section-heading">
-
-        <div>
-
-            <span class="section-label">
-                STEP-BY-STEP PROCESS
-            </span>
-
-            <h2>
-                Complete {{ module.code }} Process
-            </h2>
-
-        </div>
-
-        <p>
-            Every important step used by this module is
-            explained below.
-        </p>
-
-    </div>
-
-
-    <div class="process-list">
-
-
-        {% for step in module.steps %}
-
-        <article class="process-card">
-
-
-            <div class="process-number">
-                {{ "%02d"|format(loop.index) }}
-            </div>
-
-
-            <div class="process-content">
-
-
-                <div class="process-title">
-
-                    <span>
-                        STEP {{ loop.index }}
-                    </span>
-
-                    <h3>
-                        {{ step.title }}
-                    </h3>
-
-                </div>
-
-
-                {% if step.what %}
-
-                <div class="process-section">
-
-                    <h4>
-                        What is done?
-                    </h4>
-
-                    <p>
-                        {{ step.what }}
-                    </p>
-
-                </div>
-
-                {% endif %}
-
-
-                {% if step.formula %}
-
-                <div class="process-section">
-
-                    <h4>
-                        Formula / Method
-                    </h4>
-
-                    <div class="formula-box">
-
-                        <code>
-                            {{ step.formula }}
-                        </code>
-
-                    </div>
-
-                </div>
-
-                {% endif %}
-
-
-                {% if step.understanding %}
-
-                <div class="process-section">
-
-                    <h4>
-                        Understanding
-                    </h4>
-
-                    <p>
-                        {{ step.understanding }}
-                    </p>
-
-                </div>
-
-                {% endif %}
-
-
-            </div>
-
-
-        </article>
-
-        {% endfor %}
-
-
-    </div>
-
-</section>
-
-
-
-<!-- =====================================================
-     CSV RESULTS / SMALL PREVIEW
-     ===================================================== -->
-
-{% if csv_results %}
-
-<section class="section">
-
-
-    <div class="section-heading">
-
-        <div>
-
-            <span class="section-label">
-                RESULT PREVIEW
-            </span>
-
-            <h2>
-                Result Preview
-            </h2>
-
-        </div>
-
-    </div>
-
-    <p class="result-preview-note">Showing at most 100 randomly sampled rows from each CSV result file. The original result file is not modified.</p>
-
-    {% for item in csv_results %}
-
-    <div class="result-table-card">
-
-
-        <div class="result-card-header">
-
-            <h3>
-                {{ item.title }}
-            </h3>
-
-            <span>
-                CSV
-            </span>
-
-        </div>
-
-
-        {% if item.rows %}
-
-        <div class="table-container">
-
-            <table class="data-table">
-
-                <thead>
-
-                    <tr>
-
-                        {% for column in item.rows[0].keys() %}
-
-                        <th>
-                            {{ column }}
-                        </th>
-
+            <div class="info-box" style="margin-bottom:22px;">
+                <h3 class="info-box-title">2. Calculation</h3>
+                <div class="info-box-text calculation-box">
+                    <strong>Formula / Method</strong><br>
+                    {{ card.formula }}
+                    <br><br>
+                    <strong>Worked calculations from real source rows</strong>
+                    <ol style="margin:12px 0 0 20px;">
+                        {% for example in card.calculation_examples %}
+                        <li style="margin-bottom:8px;">{{ example }}</li>
                         {% endfor %}
+                    </ol>
+                    <p style="margin-top:12px;">Calculation sample used internally: <strong>{{ card.calculation_sample_size }}</strong> real records.</p>
+                </div>
+            </div>
 
-                    </tr>
-
-                </thead>
-
-
-                <tbody>
-
-                    {% for row in item.rows[:100] %}
-
-                    <tr>
-
-                        {% for value in row.values() %}
-
-                        <td>
-                            {{ value }}
-                        </td>
-
+            <div class="info-box" style="margin-bottom:22px;">
+                <h3 class="info-box-title">3. Calculated Values</h3>
+                {% if card.result_table and card.result_table.rows %}
+                <div class="sample-table-wrapper" style="max-height:360px;overflow:auto;">
+                    <table class="sample-table">
+                        <thead><tr>{% for column in card.result_table.columns %}<th>{{ column }}</th>{% endfor %}</tr></thead>
+                        <tbody>
+                        {% for row in card.result_table.rows %}
+                            <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
                         {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+                {% if card.result %}<p class="info-box-text" style="margin-top:14px;">{{ card.result }}</p>{% endif %}
+            </div>
 
-                    </tr>
-
+            <div class="visualization-section">
+                <h3 class="visualization-heading">4. Visualization</h3>
+                {% if charts_for_algorithm %}
+                <div class="chart-grid">
+                    {% for filename in charts_for_algorithm %}
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <h4 class="chart-title">{{ filename.rsplit('.',1)[0].replace('_',' ').title() }}</h4>
+                            {% if '3d' in filename.lower() %}<span class="sample-badge">3D</span>{% endif %}
+                        </div>
+                        <div class="chart-image-wrapper">
+                            <img src="{{ url_for('chart_file', code=module.code, filename=filename) }}" alt="{{ filename }}" class="chart-image" loading="lazy">
+                        </div>
+                    </div>
                     {% endfor %}
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-        {% else %}
-
-        <div class="empty-state">
-
-            No CSV result records available.
+                </div>
+                {% else %}
+                <div class="empty-state">No visualization file is mapped to this algorithm.</div>
+                {% endif %}
+            </div>
 
         </div>
-
-        {% endif %}
-
-
-    </div>
-
+    </section>
     {% endfor %}
 
-
-</section>
-
-{% endif %}
-
-
-
-<!-- =====================================================
-     CHARTS
-     ===================================================== -->
-
-{% if charts %}
-
-<section class="section">
-
-
-    <div class="section-heading">
-
-        <div>
-
-            <span class="section-label">
-                VISUALIZATION
-            </span>
-
-            <h2>
-                Charts & Visualizations
-            </h2>
-
-        </div>
-
-        <p>
-            Visual results generated during the machine
-            learning workflow.
-        </p>
-
-    </div>
-
-
-    <div class="charts-grid">
-
-
-        {% for chart in charts %}
-
-        <div class="chart-card">
-
-
-            <div class="chart-header">
-
-                <h3>
-                    {{ chart.title }}
-                </h3>
-
-            </div>
-
-
-            <img
-                src="{{ url_for(
-                    'chart_file',
-                    code=module.code,
-                    filename=chart.filename
-                ) }}"
-                alt="{{ chart.title }}"
-                class="chart-image"
-            >
-
-
-        </div>
-
-        {% endfor %}
-
-
-    </div>
-
-</section>
-
-{% endif %}
-
-
-
-<!-- =====================================================
-     GENERATED FILES
-     ===================================================== -->
-
-{% if files %}
-
-<section class="section">
-
-
-    <div class="section-heading">
-
-        <div>
-
-            <span class="section-label">
-                OUTPUT FILES
-            </span>
-
-            <h2>
-                Generated Module Files
-            </h2>
-
-        </div>
-
-    </div>
-
-
-    <div class="file-list">
-
-
-        {% for file in files %}
-
-        <a
-            href="{{ url_for(
-                'report_file',
-                code=module.code,
-                filename=file
-            ) }}"
-            class="file-item"
-            target="_blank"
-        >
-
-            <span class="file-icon">
-                FILE
-            </span>
-
-            <span>
-                {{ file }}
-            </span>
-
-            <span class="file-arrow">
-                →
-            </span>
-
-        </a>
-
-        {% endfor %}
-
-
-    </div>
-
-</section>
-
-{% endif %}
-
-
-
-<!-- =====================================================
-     EXAM / VIVA REVISION
-     ===================================================== -->
-
-<section class="section">
-
-
-    <div class="revision-card">
-
-
-        <div class="revision-header">
-
-            <span class="section-label">
-                EXAM & VIVA
-            </span>
-
-            <h2>
-                Quick Revision
-            </h2>
-
-        </div>
-
-
-        <div class="revision-grid">
-
-
-            <div>
-
-                <h3>
-                    Remember
-                </h3>
-
-                <p>
-                    Know the purpose of every algorithm,
-                    its input, output and major steps.
-                </p>
-
-            </div>
-
-
-            <div>
-
-                <h3>
-                    Formula
-                </h3>
-
-                <p>
-                    Be able to write and explain the important
-                    mathematical formula used by the algorithm.
-                </p>
-
-            </div>
-
-
-            <div>
-
-                <h3>
-                    Dataset
-                </h3>
-
-                <p>
-                    Understand which features and targets are
-                    used in the PlacementPredict dataset.
-                </p>
-
-            </div>
-
-
-            <div>
-
-                <h3>
-                    Result
-                </h3>
-
-                <p>
-                    Understand how model performance and
-                    generated results are interpreted.
-                </p>
-
-            </div>
-
-
-        </div>
-
-
-    </div>
-
-</section>
-
-
-
-<!-- =====================================================
-     PRINT INFORMATION
-     ===================================================== -->
-
-<section class="print-note">
-
-    <strong>
-        Printing:
-    </strong>
-
-    Use
-    <kbd>Ctrl</kbd>
-    +
-    <kbd>P</kbd>
-    to print or save this module as a PDF.
-
-</section>
-
-
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.querySelectorAll('.chart-image').forEach(function(image) {
+        image.addEventListener('error', function() {
+            const wrapper = this.parentElement;
+            this.style.display = 'none';
+            const message = document.createElement('div');
+            message.className = 'no-chart';
+            message.textContent = 'Visualization file is not available.';
+            wrapper.appendChild(message);
+        });
+    });
+</script>
 {% endblock %}

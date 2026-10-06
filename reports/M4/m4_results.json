@@ -14,6 +14,26 @@
         "reduced_features": 12,
         "explained_variance": 0.9571241017674049
     },
+    "dimensionality_reduction": {
+        "sample_size": 5000,
+        "source_rows": 50000,
+        "pre_reduction_dimensions": 28,
+        "umap": {
+            "sample_size": 5000,
+            "input_dimensions": 28,
+            "output_dimensions": 2,
+            "n_neighbors": 15,
+            "min_dist": 0.1,
+            "metric": "euclidean"
+        },
+        "tsne": {
+            "sample_size": 5000,
+            "input_dimensions": 28,
+            "output_dimensions": 2,
+            "perplexity": 30.0,
+            "metric": "euclidean"
+        }
+    },
     "clustering": [
         {
             "Algorithm": "K-Means",
@@ -25,7 +45,7 @@
         {
             "Algorithm": "K-Means++",
             "Clusters": 3,
-            "Inertia": 664555.3102410911,
+            "Inertia": 664555.310241091,
             "silhouette_score": 0.2591867105380296,
             "calinski_harabasz_score": 27665.156278185037
         },

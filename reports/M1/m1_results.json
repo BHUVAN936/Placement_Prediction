@@ -31,11 +31,11 @@
         "categorical_features": 8
     },
     "eda": {
-        "charts_generated": 10
+        "charts_generated": 17
     },
     "files": {
-        "preprocessor": "C:\\Users\\Bhuvan\\PycharmProjects\\PythonProject\\Placement_Prediction\\models\\M1\\m1_preprocessor.joblib",
-        "report_directory": "C:\\Users\\Bhuvan\\PycharmProjects\\PythonProject\\Placement_Prediction\\reports\\M1",
-        "model_directory": "C:\\Users\\Bhuvan\\PycharmProjects\\PythonProject\\Placement_Prediction\\models\\M1"
+        "preprocessor": "C:\\Users\\Bhuvan\\PycharmProjects\\PythonProject\\Placement_Prediction(New)\\Placement_Prediction\\models\\M1\\m1_preprocessor.joblib",
+        "report_directory": "C:\\Users\\Bhuvan\\PycharmProjects\\PythonProject\\Placement_Prediction(New)\\Placement_Prediction\\reports\\M1",
+        "model_directory": "C:\\Users\\Bhuvan\\PycharmProjects\\PythonProject\\Placement_Prediction(New)\\Placement_Prediction\\models\\M1"
     }
 }
