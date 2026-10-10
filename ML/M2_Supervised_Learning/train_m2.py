@@ -594,6 +594,56 @@ def save_classification_chart(
     plt.close()
 
 
+def save_split_chart(train_len, test_len):
+    plt.figure(figsize=(7, 5))
+    plt.bar(["Training Set (80%)", "Testing Set (20%)"], [train_len, test_len], color=['#3498db', '#e74c3c'], alpha=0.85)
+    plt.ylabel("Number of Observations")
+    plt.title("M2 Train-Test Split (80/20 Holdout Partitioning)")
+    for i, v in enumerate([train_len, test_len]):
+        plt.text(i, v + (train_len * 0.01), f"{v:,}", ha='center', fontweight='bold')
+    plt.tight_layout()
+    plt.savefig(REPORT_DIR / "train_test_split.png", dpi=150)
+    plt.close()
+
+
+def save_scatter_chart(y_true, y_pred, model_name, filename):
+    plt.figure(figsize=(7, 5))
+    y_true_np = np.array(y_true)
+    sample_idx = np.random.choice(len(y_true_np), min(500, len(y_true_np)), replace=False)
+    y_t_s, y_p_s = y_true_np[sample_idx], y_pred[sample_idx]
+    
+    plt.scatter(y_t_s, y_p_s, alpha=0.5, color='#2980b9', edgecolors='none', s=25)
+    min_v = min(np.min(y_t_s), np.min(y_p_s))
+    max_v = max(np.max(y_t_s), np.max(y_p_s))
+    plt.plot([min_v, max_v], [min_v, max_v], 'r--', label='Ideal Perfect Fit (y = x)')
+    
+    plt.xlabel("Actual Salary Package")
+    plt.ylabel("Predicted Salary Package")
+    plt.title(f"{model_name}: Actual vs Predicted Salary Package")
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(REPORT_DIR / filename, dpi=150)
+    plt.close()
+
+
+def save_sigmoid_chart(y_true, probas, model_name, filename):
+    if probas is None: return
+    plt.figure(figsize=(7, 5))
+    y_true_np = np.array(y_true)
+    sorted_idx = np.argsort(probas)
+    x_axis = np.linspace(-5, 5, len(probas))
+    plt.plot(x_axis, probas[sorted_idx], color='#8e44ad', linewidth=2, label='Sigmoid Probability Curve')
+    plt.scatter(x_axis[::25], y_true_np[sorted_idx][::25], color='#e67e22', alpha=0.7, label='Observed Placement (0/1)')
+    plt.axhline(0.5, color='gray', linestyle=':', label='Decision Threshold (0.5)')
+    plt.xlabel("Linear Score (z)")
+    plt.ylabel("Predicted Probability P(Placed)")
+    plt.title(f"{model_name}: Sigmoid Curve & Probabilities")
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(REPORT_DIR / filename, dpi=150)
+    plt.close()
+
+
 # ============================================================
 # MAIN
 # ============================================================
@@ -765,6 +815,8 @@ def run_m2():
     regression_results = []
 
 
+    save_split_chart(len(X_train_reg), len(X_test_reg))
+
     for name, model in regression_models.items():
 
         print(
@@ -805,6 +857,13 @@ def run_m2():
         metrics = regression_metrics(
             y_test_reg,
             predictions
+        )
+
+        save_scatter_chart(
+            y_test_reg,
+            predictions,
+            name,
+            name.lower().replace(" ", "_") + "_data.png"
         )
 
 
@@ -973,6 +1032,13 @@ def run_m2():
             predictions,
 
             probabilities
+        )
+
+        save_sigmoid_chart(
+            y_test_class,
+            probabilities,
+            name,
+            name.lower().replace(" ", "_") + "_data.png"
         )
 
 

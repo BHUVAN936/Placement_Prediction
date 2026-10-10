@@ -19,33 +19,43 @@
         "source_rows": 50000,
         "pre_reduction_dimensions": 28,
         "umap": {
+            "status": "completed",
             "sample_size": 5000,
             "input_dimensions": 28,
-            "output_dimensions": 2,
+            "output_dimensions": [
+                2,
+                3
+            ],
             "n_neighbors": 15,
             "min_dist": 0.1,
             "metric": "euclidean"
         },
         "tsne": {
+            "status": "completed",
             "sample_size": 5000,
             "input_dimensions": 28,
-            "output_dimensions": 2,
+            "output_dimensions": [
+                2,
+                3
+            ],
             "perplexity": 30.0,
-            "metric": "euclidean"
+            "iterations": 1000,
+            "learning_rate": "auto",
+            "init": "pca"
         }
     },
     "clustering": [
         {
             "Algorithm": "K-Means",
             "Clusters": 3,
-            "Inertia": 664555.7361150981,
+            "Inertia": 664555.736115098,
             "silhouette_score": 0.2590636200463387,
             "calinski_harabasz_score": 27665.11267286631
         },
         {
             "Algorithm": "K-Means++",
             "Clusters": 3,
-            "Inertia": 664555.310241091,
+            "Inertia": 664555.3102410911,
             "silhouette_score": 0.2591867105380296,
             "calinski_harabasz_score": 27665.156278185037
         },

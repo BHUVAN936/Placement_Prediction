@@ -2406,119 +2406,278 @@ footer {
 @media print {
 
     @page {
-        size: A4;
-
-        margin: 12mm;
+        size: A4 portrait;
+        margin: 8mm 10mm;
     }
-
 
     html {
         scroll-behavior: auto;
     }
 
-
     body {
-        background: #ffffff;
-
-        color: #000000;
-
-        font-size: 11px;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        font-size: 8.5pt !important;
+        line-height: 1.3 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 
-
+    .pp-header,
+    .pp-nav,
+    .pp-footer,
+    .pp-print-button,
     .sidebar,
     .topbar,
     .topbar-actions,
     .report-actions,
-    footer {
+    .report-steps,
+    .no-print,
+    header,
+    footer,
+    button {
         display: none !important;
     }
 
-
-    .main-content {
-        margin-left: 0;
-
-        width: 100%;
+    .main-content,
+    .page-content,
+    .pp-layout {
+        margin-left: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
     }
 
-
-    .page-content {
-        max-width: none;
-
-        padding: 0;
+    /* Cover Page */
+    .report-cover {
+        min-height: auto !important;
+        height: auto !important;
+        padding: 20px 24px !important;
+        background: #1e293b !important;
+        color: #ffffff !important;
+        border-radius: 8px !important;
+        margin-bottom: 16px !important;
+        break-after: page !important;
+        page-break-after: always !important;
+        display: block !important;
     }
 
+    .report-cover h1 {
+        font-size: 24pt !important;
+        font-weight: 900 !important;
+        margin-bottom: 4px !important;
+        color: #ffffff !important;
+    }
 
-    .section,
+    .report-cover h2 {
+        font-size: 13pt !important;
+        font-weight: 700 !important;
+        margin-bottom: 8px !important;
+        color: #94a3b8 !important;
+    }
+
+    .report-cover p {
+        font-size: 9.5pt !important;
+        color: #cbd5e1 !important;
+        margin-bottom: 16px !important;
+    }
+
+    .report-cover-stats {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+        margin-top: 16px !important;
+    }
+
+    .report-cover-stats > div {
+        background: rgba(255, 255, 255, 0.08) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-radius: 6px !important;
+        padding: 8px 12px !important;
+    }
+
+    .report-cover-stats span {
+        font-size: 7.5pt !important;
+        color: #94a3b8 !important;
+        letter-spacing: 0.04em !important;
+    }
+
+    .report-cover-stats strong {
+        font-size: 15pt !important;
+        color: #ffffff !important;
+    }
+
+    /* Section & Intro */
     .report-section {
-        margin-top: 20px;
+        margin-top: 8px !important;
+        margin-bottom: 12px !important;
     }
 
-
-    .hero-section,
-    .report-cover,
-    .report-final {
-        break-inside: avoid;
-
-        box-shadow: none;
+    .report-intro-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+        margin-top: 8px !important;
     }
 
-
-    .module-card,
-    .stat-card,
-    .info-card,
-    .quick-card,
-    .example-card,
-    .process-card,
-    .result-card,
-    .chart-card,
-    .report-step,
-    .report-example,
-    .report-info-card,
-    .revision-card {
-        box-shadow: none;
-
-        break-inside: avoid;
+    .report-info-card {
+        padding: 8px 10px !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 6px !important;
+        background: #f8fafc !important;
+        break-inside: avoid !important;
     }
 
+    .report-info-card span {
+        font-size: 7pt !important;
+    }
+
+    .report-info-card h3 {
+        font-size: 10pt !important;
+        margin-bottom: 2px !important;
+    }
+
+    .report-info-card p {
+        font-size: 8pt !important;
+        margin-bottom: 0 !important;
+    }
+
+    .report-module-section {
+        page-break-before: always !important;
+        break-before: page !important;
+        margin-top: 12px !important;
+    }
+
+    .report-section-heading,
+    .report-module-heading {
+        margin-bottom: 10px !important;
+        break-after: avoid !important;
+        page-break-after: avoid !important;
+    }
+
+    .report-section-heading h2,
+    .report-module-heading h2 {
+        break-after: avoid !important;
+        page-break-after: avoid !important;
+    }
+
+    .result-card {
+        box-shadow: none !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 6px !important;
+        margin-bottom: 10px !important;
+        padding: 8px 10px !important;
+        background: #ffffff !important;
+    }
+
+    .result-card-header {
+        margin-bottom: 6px !important;
+        padding-bottom: 4px !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+    }
+
+    .result-card h3 {
+        font-size: 11pt !important;
+        font-weight: 800 !important;
+        color: #0f172a !important;
+        margin-bottom: 2px !important;
+    }
+
+    .result-card h4 {
+        font-size: 8.5pt !important;
+        font-weight: 700 !important;
+        color: #1e293b !important;
+        margin-top: 5px !important;
+        margin-bottom: 2px !important;
+    }
 
     .table-container {
-        overflow: visible;
-
-        break-inside: auto;
+        overflow: visible !important;
+        max-height: none !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        margin-bottom: 4px !important;
     }
-
 
     .data-table {
-        min-width: 0;
-
-        font-size: 7px;
+        width: 100% !important;
+        min-width: 0 !important;
+        font-size: 7.5pt !important;
+        border-collapse: collapse !important;
+        margin-top: 2px !important;
     }
-
 
     .data-table th,
     .data-table td {
-        padding: 4px 5px;
-
-        white-space: normal;
+        padding: 2px 4px !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        border: 1px solid #cbd5e1 !important;
+        text-align: left !important;
+        line-height: 1.2 !important;
     }
 
+    .data-table th {
+        background: #f1f5f9 !important;
+        color: #0f172a !important;
+        font-weight: 700 !important;
+    }
+
+    .charts-grid {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+        justify-content: flex-start !important;
+        margin-top: 4px !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
 
     .chart-card {
-        break-inside: avoid;
-
-        page-break-inside: avoid;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        flex: 1 1 47% !important;
+        max-width: 48% !important;
+        padding: 3px !important;
+        margin-bottom: 3px !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 4px !important;
     }
 
+    .chart-header h3 {
+        font-size: 8pt !important;
+        margin: 1px 0 2px !important;
+        text-align: center !important;
+    }
 
     .chart-image {
-        max-height: 400px;
+        max-height: 115px !important;
+        width: 100% !important;
+        object-fit: contain !important;
     }
-
 
     .formula-box {
-        break-inside: avoid;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        padding: 4px 8px !important;
+        margin-bottom: 4px !important;
+        background: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 4px !important;
+        font-size: 8pt !important;
     }
+
+    h1 { font-size: 18pt !important; margin-bottom: 4px !important; }
+    h2 { font-size: 13pt !important; margin-bottom: 4px !important; }
+    h3 { font-size: 10.5pt !important; margin-bottom: 2px !important; }
+    h4 { font-size: 8.5pt !important; margin-top: 4px !important; margin-bottom: 2px !important; }
+    p { margin-bottom: 2px !important; font-size: 8.5pt !important; }
+    ol, ul { margin-top: 2px !important; margin-bottom: 4px !important; padding-left: 16px !important; }
+    li { margin-bottom: 1px !important; font-size: 8pt !important; }
+}
 
 
     a {
