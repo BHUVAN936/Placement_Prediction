@@ -6,10 +6,6 @@ import numpy as np
 import pandas as pd
 
 
-# ============================================================
-# PROJECT PATH
-# ============================================================
-
 ROOT = Path(__file__).resolve().parents[2]
 
 REPORT_DIR = (
@@ -22,11 +18,6 @@ REPORT_DIR.mkdir(
     parents=True,
     exist_ok=True,
 )
-
-
-# ============================================================
-# HELPER
-# ============================================================
 
 def safe_numeric(
     df: pd.DataFrame,
@@ -41,12 +32,6 @@ def safe_numeric(
         df[column],
         errors="coerce",
     )
-
-
-# ============================================================
-# AVERAGE SGPA
-# ============================================================
-
 def add_average_sgpa(
     df: pd.DataFrame,
 ):
@@ -83,11 +68,6 @@ def add_average_sgpa(
         )
 
     return data
-
-
-# ============================================================
-# SKILL SCORE
-# ============================================================
 
 def add_skill_score(
     df: pd.DataFrame,
@@ -161,10 +141,6 @@ def add_skill_score(
     return data
 
 
-# ============================================================
-# EXPERIENCE SCORE
-# ============================================================
-
 def add_experience_score(
     df: pd.DataFrame,
 ):
@@ -211,11 +187,6 @@ def add_experience_score(
 
     return data
 
-
-# ============================================================
-# ACADEMIC CONSISTENCY
-# ============================================================
-
 def add_academic_consistency(
     df: pd.DataFrame,
 ):
@@ -258,10 +229,6 @@ def add_academic_consistency(
 
     return data
 
-
-# ============================================================
-# ACADEMIC SCORE
-# ============================================================
 
 def add_academic_score(
     df: pd.DataFrame,
@@ -351,11 +318,6 @@ def add_academic_score(
 
     return data
 
-
-# ============================================================
-# INTERVIEW SCORE
-# ============================================================
-
 def add_interview_score(
     df: pd.DataFrame,
 ):
@@ -434,11 +396,6 @@ def add_interview_score(
 
     return data
 
-
-# ============================================================
-# COMPLETE FEATURE ENGINEERING
-# ============================================================
-
 def engineer_features(
     df: pd.DataFrame,
 ):
@@ -455,10 +412,6 @@ def engineer_features(
 
     data = df.copy()
 
-    # --------------------------------------------------------
-    # Academic features
-    # --------------------------------------------------------
-
     data = add_average_sgpa(
         data
     )
@@ -471,10 +424,6 @@ def engineer_features(
         data
     )
 
-    # --------------------------------------------------------
-    # Skill features
-    # --------------------------------------------------------
-
     data = add_skill_score(
         data
     )
@@ -483,17 +432,10 @@ def engineer_features(
         data
     )
 
-    # --------------------------------------------------------
-    # Experience
-    # --------------------------------------------------------
-
     data = add_experience_score(
         data
     )
 
-    # --------------------------------------------------------
-    # Final cleanup
-    # --------------------------------------------------------
 
     data = data.replace(
         [np.inf, -np.inf],
@@ -530,10 +472,6 @@ def engineer_features(
 
     return data
 
-
-# ============================================================
-# FEATURE ENGINEERING REPORT
-# ============================================================
 
 def get_feature_engineering_report(
     before: pd.DataFrame,
@@ -573,10 +511,6 @@ def get_feature_engineering_report(
     }
 
 
-# ============================================================
-# SAVE FEATURE DATA
-# ============================================================
-
 def save_engineered_data(
     df: pd.DataFrame,
     filename="m1_engineered_dataset.csv",
@@ -594,10 +528,6 @@ def save_engineered_data(
 
     return output_path
 
-
-# ============================================================
-# SCRIPT TEST
-# ============================================================
 
 if __name__ == "__main__":
 

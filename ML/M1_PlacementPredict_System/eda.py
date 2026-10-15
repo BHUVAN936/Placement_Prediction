@@ -11,11 +11,6 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-
-# ============================================================
-# PROJECT PATHS
-# ============================================================
-
 ROOT = Path(__file__).resolve().parents[2]
 
 REPORT_DIR = ROOT / "reports" / "M1"
@@ -24,11 +19,6 @@ REPORT_DIR.mkdir(
     parents=True,
     exist_ok=True,
 )
-
-
-# ============================================================
-# EDA CLASS
-# ============================================================
 
 class EDAAnalyzer:
     """
@@ -65,10 +55,6 @@ class EDAAnalyzer:
             parents=True,
             exist_ok=True,
         )
-
-    # ========================================================
-    # BASIC INFORMATION
-    # ========================================================
 
     def basic_information(self):
 
@@ -122,10 +108,6 @@ class EDAAnalyzer:
 
         }
 
-    # ========================================================
-    # NUMERICAL SUMMARY
-    # ========================================================
-
     def numerical_summary(self):
 
         numeric = (
@@ -162,10 +144,6 @@ class EDAAnalyzer:
             )
         )
 
-    # ========================================================
-    # MISSING VALUE SUMMARY
-    # ========================================================
-
     def missing_value_summary(self):
 
         missing = (
@@ -196,10 +174,6 @@ class EDAAnalyzer:
                 orient="records"
             )
         )
-
-    # ========================================================
-    # CATEGORICAL SUMMARY
-    # ========================================================
 
     def categorical_summary(self):
 
@@ -245,10 +219,6 @@ class EDAAnalyzer:
 
         return result
 
-    # ========================================================
-    # PLACEMENT DISTRIBUTION
-    # ========================================================
-
     def placement_distribution(self):
 
         if (
@@ -271,10 +241,6 @@ class EDAAnalyzer:
             for key, value
             in values.items()
         }
-
-    # ========================================================
-    # SAVE CSV
-    # ========================================================
 
     def save_csv_reports(self):
 
@@ -365,10 +331,6 @@ class EDAAnalyzer:
                 index=False,
             )
 
-    # ========================================================
-    # CHART HELPER
-    # ========================================================
-
     def _save_chart(
         self,
         filename: str,
@@ -391,10 +353,6 @@ class EDAAnalyzer:
 
         return filename
 
-    # ========================================================
-    # PLACEMENT CHART
-    # ========================================================
-
     def plot_placement_distribution(self):
 
         if (
@@ -415,9 +373,28 @@ class EDAAnalyzer:
             figsize=(7, 5)
         )
 
-        counts.plot(
-            kind="bar"
+        labels = ["Not Placed (0)", "Placed (1)"]
+        colors = ["#dc2626", "#16a34a"]
+
+        bars = plt.bar(
+            labels,
+            counts.values,
+            color=colors,
+            edgecolor="#1f2937",
+            linewidth=1.2,
+            width=0.55
         )
+
+        for bar in bars:
+            height = bar.get_height()
+            plt.text(
+                bar.get_x() + bar.get_width() / 2.0,
+                height + 300,
+                f"{height:,}",
+                ha="center",
+                va="bottom",
+                fontweight="bold"
+            )
 
         plt.title(
             "Placement Status Distribution"
@@ -431,17 +408,12 @@ class EDAAnalyzer:
             "Number of Students"
         )
 
-        plt.xticks(
-            rotation=0
-        )
+        plt.grid(axis='y', linestyle='--', alpha=0.5)
+        plt.tight_layout()
 
         return self._save_chart(
             "placement_distribution.png"
         )
-
-    # ========================================================
-    # PLACEMENT PIE CHART
-    # ========================================================
 
     def plot_placement_pie(self):
 
@@ -456,33 +428,38 @@ class EDAAnalyzer:
                 "PlacementStatus"
             ]
             .value_counts()
+            .sort_index()
         )
 
         plt.figure(
             figsize=(7, 7)
         )
 
-        plt.pie(
+        labels = ["Not Placed (0)", "Placed (1)"]
+        colors = ["#dc2626", "#16a34a"]
+
+        wedges, texts, autotexts = plt.pie(
             counts.values,
-            labels=[
-                str(x)
-                for x in counts.index
-            ],
+            labels=labels,
             autopct="%1.1f%%",
             startangle=90,
+            colors=colors,
+            wedgeprops={"edgecolor": "#ffffff", "linewidth": 2},
+            textprops={"fontweight": "bold"}
         )
+        for autotext in autotexts:
+            autotext.set_color("white")
+            autotext.set_fontsize(12)
 
         plt.title(
             "Placement Status Percentage"
         )
 
+        plt.tight_layout()
+
         return self._save_chart(
             "placement_pie.png"
         )
-
-    # ========================================================
-    # CGPA DISTRIBUTION
-    # ========================================================
 
     def plot_cgpa_distribution(self):
 
@@ -515,9 +492,6 @@ class EDAAnalyzer:
             "cgpa_distribution.png"
         )
 
-    # ========================================================
-    # ATTENDANCE DISTRIBUTION
-    # ========================================================
 
     def plot_attendance_distribution(self):
 
@@ -555,9 +529,6 @@ class EDAAnalyzer:
             "attendance_distribution.png"
         )
 
-    # ========================================================
-    # INTERNSHIPS DISTRIBUTION
-    # ========================================================
 
     def plot_internships(self):
 
@@ -602,10 +573,6 @@ class EDAAnalyzer:
         return self._save_chart(
             "internships_distribution.png"
         )
-
-    # ========================================================
-    # SGPA COMPARISON
-    # ========================================================
 
     def plot_sgpa_distribution(self):
 
@@ -658,10 +625,6 @@ class EDAAnalyzer:
         return self._save_chart(
             "semester_sgpa.png"
         )
-
-    # ========================================================
-    # ACADEMIC FEATURES
-    # ========================================================
 
     def plot_academic_features(self):
 
@@ -733,9 +696,6 @@ class EDAAnalyzer:
             "academic_skill_features.png"
         )
 
-    # ========================================================
-    # CORRELATION HEATMAP
-    # ========================================================
 
     def plot_correlation(self):
 
@@ -823,10 +783,6 @@ class EDAAnalyzer:
             "correlation_heatmap.png"
         )
 
-    # ========================================================
-    # PLACEMENT VS CGPA
-    # ========================================================
-
     def plot_cgpa_vs_placement(self):
 
         if not all(
@@ -843,10 +799,13 @@ class EDAAnalyzer:
             figsize=(8, 5)
         )
 
+        palette = {0: "#dc2626", 1: "#16a34a", "0": "#dc2626", "1": "#16a34a"}
+
         sns.boxplot(
             data=self.df,
             x="PlacementStatus",
             y="CGPA",
+            palette=palette
         )
 
         plt.title(
@@ -854,7 +813,7 @@ class EDAAnalyzer:
         )
 
         plt.xlabel(
-            "Placement Status"
+            "Placement Status (0: Not Placed, 1: Placed)"
         )
 
         plt.ylabel(
@@ -864,10 +823,6 @@ class EDAAnalyzer:
         return self._save_chart(
             "cgpa_vs_placement.png"
         )
-
-    # ========================================================
-    # CODING SCORE VS PLACEMENT
-    # ========================================================
 
     def plot_coding_vs_placement(self):
 
@@ -885,10 +840,13 @@ class EDAAnalyzer:
             figsize=(8, 5)
         )
 
+        palette = {0: "#dc2626", 1: "#16a34a", "0": "#dc2626", "1": "#16a34a"}
+
         sns.boxplot(
             data=self.df,
             x="PlacementStatus",
             y="CodingTestScore",
+            palette=palette
         )
 
         plt.title(
@@ -896,7 +854,7 @@ class EDAAnalyzer:
         )
 
         plt.xlabel(
-            "Placement Status"
+            "Placement Status (0: Not Placed, 1: Placed)"
         )
 
         plt.ylabel(
@@ -906,10 +864,6 @@ class EDAAnalyzer:
         return self._save_chart(
             "coding_vs_placement.png"
         )
-
-    # ========================================================
-    # RUN COMPLETE EDA
-    # ========================================================
 
     def run(self):
 
@@ -980,11 +934,6 @@ class EDAAnalyzer:
 
         }
 
-
-# ============================================================
-# FUNCTION API
-# ============================================================
-
 def run_eda(
     df: pd.DataFrame,
     output_dir: Path | None = None,
@@ -996,11 +945,6 @@ def run_eda(
     )
 
     return analyzer.run()
-
-
-# ============================================================
-# SCRIPT TEST
-# ============================================================
 
 if __name__ == "__main__":
 

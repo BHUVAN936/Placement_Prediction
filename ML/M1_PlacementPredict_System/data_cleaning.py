@@ -5,25 +5,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-
-# ============================================================
-# PROJECT PATH
-# ============================================================
-
 ROOT = Path(__file__).resolve().parents[2]
-
-
-# ============================================================
-# REQUIRED TARGET
-# ============================================================
-
 TARGET_COLUMN = "PlacementStatus"
-
-
-# ============================================================
-# COLUMN NORMALIZATION
-# ============================================================
-
 def normalize_column_names(
     df: pd.DataFrame,
 ) -> pd.DataFrame:
@@ -45,11 +28,6 @@ def normalize_column_names(
 
     return data
 
-
-# ============================================================
-# REMOVE EMPTY COLUMNS
-# ============================================================
-
 def remove_empty_columns(
     df: pd.DataFrame,
 ) -> pd.DataFrame:
@@ -63,11 +41,6 @@ def remove_empty_columns(
         axis=1,
         how="all",
     )
-
-
-# ============================================================
-# REMOVE DUPLICATES
-# ============================================================
 
 def remove_duplicates(
     df: pd.DataFrame,
@@ -83,11 +56,6 @@ def remove_duplicates(
     ).reset_index(
         drop=True
     )
-
-
-# ============================================================
-# HANDLE NUMERIC MISSING VALUES
-# ============================================================
 
 def fill_numeric_missing_values(
     df: pd.DataFrame,
@@ -120,11 +88,6 @@ def fill_numeric_missing_values(
         )
 
     return data
-
-
-# ============================================================
-# HANDLE CATEGORICAL MISSING VALUES
-# ============================================================
 
 def fill_categorical_missing_values(
     df: pd.DataFrame,
@@ -168,11 +131,6 @@ def fill_categorical_missing_values(
 
     return data
 
-
-# ============================================================
-# CLEAN TARGET
-# ============================================================
-
 def clean_target(
     df: pd.DataFrame,
 ) -> pd.DataFrame:
@@ -194,10 +152,6 @@ def clean_target(
     target = data[
         TARGET_COLUMN
     ]
-
-    # --------------------------------------------------------
-    # Convert common text labels to 0/1.
-    # --------------------------------------------------------
 
     if not pd.api.types.is_numeric_dtype(
         target
@@ -260,19 +214,11 @@ def clean_target(
             errors="coerce",
         )
 
-    # --------------------------------------------------------
-    # Remove rows where target is unavailable.
-    # --------------------------------------------------------
-
     data = data.dropna(
         subset=[
             TARGET_COLUMN
         ]
     )
-
-    # --------------------------------------------------------
-    # Force integer binary target when possible.
-    # --------------------------------------------------------
 
     unique_values = sorted(
         data[
@@ -295,11 +241,6 @@ def clean_target(
         )
 
     return data
-
-
-# ============================================================
-# CLEAN COMPLETE DATASET
-# ============================================================
 
 def clean_data(
     df: pd.DataFrame,
@@ -331,57 +272,31 @@ def clean_data(
 
     original_rows = len(data)
 
-    # --------------------------------------------------------
-    # Step 1
-    # --------------------------------------------------------
-
     data = normalize_column_names(
         data
     )
-
-    # --------------------------------------------------------
-    # Step 2
-    # --------------------------------------------------------
 
     data = remove_empty_columns(
         data
     )
 
-    # --------------------------------------------------------
-    # Step 3
-    # --------------------------------------------------------
 
     data = remove_duplicates(
         data
     )
 
-    # --------------------------------------------------------
-    # Step 4
-    # --------------------------------------------------------
 
     data = clean_target(
         data
     )
 
-    # --------------------------------------------------------
-    # Step 5
-    # --------------------------------------------------------
-
     data = fill_numeric_missing_values(
         data
     )
 
-    # --------------------------------------------------------
-    # Step 6
-    # --------------------------------------------------------
-
     data = fill_categorical_missing_values(
         data
     )
-
-    # --------------------------------------------------------
-    # Step 7
-    # --------------------------------------------------------
 
     data = data.replace(
         [np.inf, -np.inf],
@@ -434,11 +349,6 @@ def clean_data(
     print()
 
     return data
-
-
-# ============================================================
-# CLEANING REPORT
-# ============================================================
 
 def cleaning_report(
     before: pd.DataFrame,
@@ -504,11 +414,6 @@ def cleaning_report(
 
     }
 
-
-# ============================================================
-# DATASET SUMMARY
-# ============================================================
-
 def dataset_summary(
     df: pd.DataFrame,
 ) -> dict:
@@ -568,10 +473,6 @@ def dataset_summary(
 
     }
 
-
-# ============================================================
-# SCRIPT TEST
-# ============================================================
 
 if __name__ == "__main__":
 

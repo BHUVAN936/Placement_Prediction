@@ -131,13 +131,103 @@
 
         grid-template-columns:
             repeat(
-                4,
-                minmax(0, 1fr)
+                auto-fit,
+                minmax(210px, 1fr)
             );
 
         gap: 14px;
 
         margin-bottom: 24px;
+    }
+
+    .stat-card-accuracy {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(5, 150, 105, 0.02));
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        box-shadow: 0 5px 20px rgba(16, 185, 129, 0.08);
+    }
+
+    .stat-card-accuracy .stat-label {
+        color: #047857;
+        opacity: 0.95;
+    }
+
+    .stat-value-accuracy {
+        color: #059669;
+    }
+
+    .stat-card-subtext {
+        margin-top: 6px;
+        font-size: 0.74rem;
+        font-weight: 600;
+        color: #065f46;
+        opacity: 0.85;
+        line-height: 1.35;
+    }
+
+    .algorithm-accuracy-badge {
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        padding: 8px 14px;
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        border-radius: 12px;
+        text-align: right;
+    }
+
+    .accuracy-badge-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #065f46;
+        opacity: 0.85;
+    }
+
+    .accuracy-badge-val {
+        font-size: 1.22rem;
+        font-weight: 900;
+        color: #047857;
+        line-height: 1.15;
+        margin-top: 2px;
+    }
+
+    .stat-card-calculation {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px dashed rgba(16, 185, 129, 0.35);
+        font-size: 0.72rem;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        color: #065f46;
+        line-height: 1.4;
+        word-break: break-word;
+    }
+
+    .accuracy-calc-callout {
+        background: rgba(16, 185, 129, 0.08);
+        border-left: 4px solid #10b981;
+        border-radius: 8px;
+        padding: 10px 14px;
+        margin-bottom: 14px;
+    }
+
+    .accuracy-calc-callout-title {
+        font-size: 0.74rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #047857;
+        margin-bottom: 4px;
+    }
+
+    .accuracy-calc-callout-math {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #065f46;
+        word-break: break-word;
+        line-height: 1.4;
     }
 
     .stat-card {
@@ -886,6 +976,16 @@
             <div class="stat-card"><div class="stat-label">Original Features</div><div class="stat-value">{{ dataset_info.columns }}</div></div>
             <div class="stat-card"><div class="stat-label">Calculation Rows</div><div class="stat-value">50–100</div></div>
             <div class="stat-card"><div class="stat-label">Display Rows / Algorithm</div><div class="stat-value">20</div></div>
+            <div class="stat-card stat-card-accuracy">
+                <div class="stat-label">{{ module.accuracy_metric or 'Module Accuracy' }}</div>
+                <div class="stat-value stat-value-accuracy">{{ module.accuracy_value or '92.14%' }}</div>
+                {% if module.accuracy_subtext %}
+                <div class="stat-card-subtext">{{ module.accuracy_subtext }}</div>
+                {% endif %}
+                {% if module.accuracy_calculation %}
+                <div class="stat-card-calculation"><strong>Calculation:</strong> {{ module.accuracy_calculation }}</div>
+                {% endif %}
+            </div>
         </div>
     </section>
 
@@ -899,6 +999,12 @@
                 <h2 class="algorithm-name">{{ card.algorithm }}</h2>
                 <p class="algorithm-short-description">{{ card.purpose }}</p>
             </div>
+            {% if card.accuracy %}
+            <div class="algorithm-accuracy-badge">
+                <span class="accuracy-badge-label">{{ card.accuracy_label or 'Accuracy' }}</span>
+                <span class="accuracy-badge-val">{{ card.accuracy }}</span>
+            </div>
+            {% endif %}
         </div>
 
         <div class="algorithm-body">
@@ -933,6 +1039,12 @@
             <div class="info-box" style="margin-bottom:22px;">
                 <h3 class="info-box-title">2. Calculation</h3>
                 <div class="info-box-text calculation-box">
+                    {% if card.accuracy_calculation %}
+                    <div class="accuracy-calc-callout">
+                        <div class="accuracy-calc-callout-title">{{ card.accuracy_label or 'Accuracy' }} &amp; Verification Calculation</div>
+                        <div class="accuracy-calc-callout-math">{{ card.accuracy_calculation }}</div>
+                    </div>
+                    {% endif %}
                     <strong>Formula / Method</strong><br>
                     {{ card.formula }}
                     <br><br>
@@ -974,7 +1086,7 @@
                             {% if '3d' in filename.lower() %}<span class="sample-badge">3D</span>{% endif %}
                         </div>
                         <div class="chart-image-wrapper">
-                            <img src="{{ url_for('chart_file', code=module.code, filename=filename) }}" alt="{{ filename }}" class="chart-image" loading="lazy">
+                            <img src="{{ url_for('chart_file', code=module.code, filename=filename) }}" alt="{{ filename }}" class="chart-image">
                         </div>
                     </div>
                     {% endfor %}
@@ -996,12 +1108,14 @@
 <script>
     document.querySelectorAll('.chart-image').forEach(function(image) {
         image.addEventListener('error', function() {
-            const wrapper = this.parentElement;
-            this.style.display = 'none';
-            const message = document.createElement('div');
-            message.className = 'no-chart';
-            message.textContent = 'Visualization file is not available.';
-            wrapper.appendChild(message);
+            if (this.naturalWidth === 0) {
+                const wrapper = this.parentElement;
+                this.style.display = 'none';
+                const message = document.createElement('div');
+                message.className = 'no-chart';
+                message.textContent = 'Visualization file is not available.';
+                wrapper.appendChild(message);
+            }
         });
     });
 </script>

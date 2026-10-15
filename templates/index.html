@@ -4,6 +4,35 @@
 PlacementPredict | Dashboard
 {% endblock %}
 
+{% block head %}
+<style>
+    .module-accuracy-tag {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 12px;
+        margin-top: 14px;
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        border-radius: 8px;
+    }
+
+    .accuracy-tag-label {
+        font-size: 11px;
+        font-weight: 750;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #065f46;
+    }
+
+    .accuracy-tag-val {
+        font-size: 13.5px;
+        font-weight: 900;
+        color: #047857;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 
@@ -261,6 +290,12 @@ PlacementPredict | Dashboard
                 {{ module.description }}
             </p>
 
+            {% if module.accuracy_value %}
+            <div class="module-accuracy-tag" title="{{ module.accuracy_calculation or module.accuracy_subtext }}">
+                <span class="accuracy-tag-label">{{ module.accuracy_metric or 'Accuracy' }}</span>
+                <strong class="accuracy-tag-val">{{ module.accuracy_value }}</strong>
+            </div>
+            {% endif %}
 
             <div class="module-purpose">
 

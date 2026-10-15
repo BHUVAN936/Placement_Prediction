@@ -140,6 +140,14 @@ Overall Report
                 {{ item.module.name }}
             </h2>
 
+            {% if item.module.accuracy_value %}
+            <p style="margin-top:6px;font-size:0.88rem;color:#047857;font-weight:700;">
+                {{ item.module.accuracy_metric }}: <strong>{{ item.module.accuracy_value }}</strong>
+                {% if item.module.accuracy_subtext %}<span style="color:#6b7280;font-weight:500;"> ({{ item.module.accuracy_subtext }})</span>{% endif %}
+                {% if item.module.accuracy_calculation %}<br><span style="font-family:monospace;font-size:0.75rem;color:#047857;font-weight:600;">Calculation: {{ item.module.accuracy_calculation }}</span>{% endif %}
+            </p>
+            {% endif %}
+
         </div>
 
 

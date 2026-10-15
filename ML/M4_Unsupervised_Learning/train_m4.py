@@ -1,18 +1,3 @@
-# ============================================================
-# M4 - UNSUPERVISED LEARNING
-# ============================================================
-#
-# Algorithms:
-#   1. K-Means
-#   2. K-Means++
-#   3. Hierarchical Clustering
-#   4. DBSCAN
-#   5. PCA
-#   6. UMAP
-#   7. t-SNE
-#
-# Windows-safe version
-# ============================================================
 
 import os
 import sys
@@ -76,11 +61,6 @@ from sklearn.metrics import (
 
 warnings.filterwarnings("ignore")
 
-
-# ============================================================
-# PATHS
-# ============================================================
-
 ROOT = Path(
     __file__
 ).resolve().parents[2]
@@ -109,22 +89,12 @@ MODEL_DIR.mkdir(
     exist_ok=True
 )
 
-
-# ============================================================
-# TARGETS TO EXCLUDE
-# ============================================================
-
 EXCLUDED_COLUMNS = [
 
     "PlacementStatus",
 
     "Salary Package"
 ]
-
-
-# ============================================================
-# LOAD DATA
-# ============================================================
 
 def load_dataset():
 

@@ -15,10 +15,6 @@ from sklearn.preprocessing import (
 )
 
 
-# ============================================================
-# PROJECT PATHS
-# ============================================================
-
 ROOT = Path(__file__).resolve().parents[2]
 
 MODEL_DIR = (
@@ -44,10 +40,6 @@ REPORT_DIR.mkdir(
 )
 
 
-# ============================================================
-# TARGET COLUMNS
-# ============================================================
-
 CLASSIFICATION_TARGET = (
     "PlacementStatus"
 )
@@ -56,10 +48,6 @@ REGRESSION_TARGET = (
     "Salary Package"
 )
 
-
-# ============================================================
-# CATEGORICAL COLUMNS
-# ============================================================
 
 CATEGORICAL_COLUMNS = [
 
@@ -81,10 +69,6 @@ CATEGORICAL_COLUMNS = [
 
 ]
 
-
-# ============================================================
-# FEATURE LIST
-# ============================================================
 
 BASE_FEATURES = [
 
@@ -147,10 +131,6 @@ BASE_FEATURES = [
 ]
 
 
-# ============================================================
-# GET AVAILABLE FEATURES
-# ============================================================
-
 def get_feature_columns(
     df: pd.DataFrame,
     target: str | None = None,
@@ -175,10 +155,6 @@ def get_feature_columns(
     return features
 
 
-# ============================================================
-# GET CATEGORICAL FEATURES
-# ============================================================
-
 def get_categorical_features(
     features,
 ):
@@ -195,10 +171,6 @@ def get_categorical_features(
     ]
 
 
-# ============================================================
-# GET NUMERICAL FEATURES
-# ============================================================
-
 def get_numeric_features(
     features,
 ):
@@ -214,10 +186,6 @@ def get_numeric_features(
 
     ]
 
-
-# ============================================================
-# CREATE ONE-HOT ENCODER
-# ============================================================
 
 def create_one_hot_encoder():
 
@@ -236,10 +204,6 @@ def create_one_hot_encoder():
             sparse=False,
         )
 
-
-# ============================================================
-# CREATE PREPROCESSOR
-# ============================================================
 
 def create_preprocessor(
     features,
@@ -341,10 +305,6 @@ def create_preprocessor(
     return preprocessor
 
 
-# ============================================================
-# FIT PREPROCESSOR
-# ============================================================
-
 def fit_preprocessor(
     df: pd.DataFrame,
     target: str | None = None,
@@ -381,10 +341,6 @@ def fit_preprocessor(
         features,
     )
 
-
-# ============================================================
-# TRANSFORM DATA
-# ============================================================
 
 def transform_data(
     df: pd.DataFrame,
@@ -423,11 +379,6 @@ def transform_data(
         preprocessor
         .transform(X)
     )
-
-
-# ============================================================
-# GET FEATURE NAMES
-# ============================================================
 
 def get_feature_names(
     preprocessor,
@@ -468,10 +419,6 @@ def get_feature_names(
 
         return []
 
-
-# ============================================================
-# FIT AND SAVE
-# ============================================================
 
 def fit_and_save_preprocessor(
     df: pd.DataFrame,
@@ -536,10 +483,6 @@ def fit_and_save_preprocessor(
     }
 
 
-# ============================================================
-# SCALE NUMERICAL MATRIX
-# ============================================================
-
 def scale_matrix(
     X,
 ):
@@ -555,10 +498,6 @@ def scale_matrix(
         X_scaled,
     )
 
-
-# ============================================================
-# SCRIPT TEST
-# ============================================================
 
 if __name__ == "__main__":
 

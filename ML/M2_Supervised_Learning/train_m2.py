@@ -1,29 +1,9 @@
-# ============================================================
-# M2 - SUPERVISED LEARNING
-# ============================================================
-#
-# Regression:
-#   1. Linear Regression
-#   2. Ridge Regression
-#   3. Lasso Regression
-#   4. Elastic Net
-#
-# Classification:
-#   5. Logistic Regression
-#   6. Ridge Logistic Regression
-#
-# Windows-safe UTF-8 / ASCII console output
-# ============================================================
 
 import os
 import sys
 import json
 import warnings
 from pathlib import Path
-
-# ============================================================
-# WINDOWS UTF-8
-# ============================================================
 
 os.environ["PYTHONIOENCODING"] = "utf-8"
 
@@ -87,11 +67,6 @@ from sklearn.metrics import (
 
 warnings.filterwarnings("ignore")
 
-
-# ============================================================
-# PATHS
-# ============================================================
-
 ROOT = Path(
     __file__
 ).resolve().parents[2]
@@ -120,11 +95,6 @@ MODEL_DIR.mkdir(
     exist_ok=True
 )
 
-
-# ============================================================
-# DATASET
-# ============================================================
-
 DATASET_NAME = (
     "placement_predict_50k Dataset (2).csv"
 )
@@ -132,11 +102,6 @@ DATASET_NAME = (
 CLASSIFICATION_TARGET = "PlacementStatus"
 
 REGRESSION_TARGET = "Salary Package"
-
-
-# ============================================================
-# LOAD DATA
-# ============================================================
 
 def load_dataset():
 
@@ -184,11 +149,6 @@ def load_dataset():
         csv_files[0]
     )
 
-
-# ============================================================
-# ONE HOT ENCODER
-# ============================================================
-
 def create_encoder():
 
     try:
@@ -205,10 +165,6 @@ def create_encoder():
             sparse=False
         )
 
-
-# ============================================================
-# PREPROCESSOR
-# ============================================================
 
 def create_preprocessor(X):
 
@@ -265,11 +221,6 @@ def create_preprocessor(X):
 
     return preprocessor
 
-
-# ============================================================
-# REGRESSION METRICS
-# ============================================================
-
 def regression_metrics(
     y_true,
     y_pred
@@ -306,11 +257,6 @@ def regression_metrics(
                 )
             )
     }
-
-
-# ============================================================
-# CLASSIFICATION METRICS
-# ============================================================
 
 def classification_metrics(
     y_true,
@@ -378,11 +324,6 @@ def classification_metrics(
 
     return result
 
-
-# ============================================================
-# SAVE CONFUSION MATRIX
-# ============================================================
-
 def save_confusion_matrix(
     y_true,
     y_pred,
@@ -433,11 +374,6 @@ def save_confusion_matrix(
     )
 
     plt.close()
-
-
-# ============================================================
-# SAVE REGRESSION COMPARISON
-# ============================================================
 
 def save_regression_chart(
     results
@@ -515,11 +451,6 @@ def save_regression_chart(
     )
 
     plt.close()
-
-
-# ============================================================
-# SAVE CLASSIFICATION COMPARISON
-# ============================================================
 
 def save_classification_chart(
     results
@@ -632,8 +563,15 @@ def save_sigmoid_chart(y_true, probas, model_name, filename):
     y_true_np = np.array(y_true)
     sorted_idx = np.argsort(probas)
     x_axis = np.linspace(-5, 5, len(probas))
-    plt.plot(x_axis, probas[sorted_idx], color='#8e44ad', linewidth=2, label='Sigmoid Probability Curve')
-    plt.scatter(x_axis[::25], y_true_np[sorted_idx][::25], color='#e67e22', alpha=0.7, label='Observed Placement (0/1)')
+    plt.plot(x_axis, probas[sorted_idx], color='#2563eb', linewidth=2, label='Sigmoid Probability Curve')
+
+    sampled_x = x_axis[::25]
+    sampled_y = y_true_np[sorted_idx][::25]
+    mask_0 = (sampled_y == 0)
+    mask_1 = (sampled_y == 1)
+    plt.scatter(sampled_x[mask_0], sampled_y[mask_0], color='#dc2626', alpha=0.8, s=35, label='Not Placed (0)')
+    plt.scatter(sampled_x[mask_1], sampled_y[mask_1], color='#16a34a', alpha=0.8, s=35, label='Placed (1)')
+
     plt.axhline(0.5, color='gray', linestyle=':', label='Decision Threshold (0.5)')
     plt.xlabel("Linear Score (z)")
     plt.ylabel("Predicted Probability P(Placed)")
@@ -643,11 +581,6 @@ def save_sigmoid_chart(y_true, probas, model_name, filename):
     plt.savefig(REPORT_DIR / filename, dpi=150)
     plt.close()
 
-
-# ============================================================
-# MAIN
-# ============================================================
-
 def run_m2():
 
     print()
@@ -655,10 +588,6 @@ def run_m2():
     print("M2 - SUPERVISED LEARNING")
     print("=" * 70)
 
-
-    # --------------------------------------------------------
-    # LOAD
-    # --------------------------------------------------------
 
     print()
     print("[1/4] Loading dataset...")
@@ -672,11 +601,6 @@ def run_m2():
     print(
         f"Columns: {len(df.columns)}"
     )
-
-
-    # --------------------------------------------------------
-    # CLEAN TARGETS
-    # --------------------------------------------------------
 
     print()
     print("[2/4] Preparing targets...")
@@ -724,11 +648,6 @@ def run_m2():
         y_reg.notna()
     )
 
-
-    # --------------------------------------------------------
-    # FEATURES
-    # --------------------------------------------------------
-
     X = df.drop(
         columns=[
             CLASSIFICATION_TARGET,
@@ -756,10 +675,6 @@ def run_m2():
         f"Input features: {X.shape[1]}"
     )
 
-
-    # ========================================================
-    # REGRESSION
-    # ========================================================
 
     print()
     print("[3/4] Training regression models...")
@@ -910,11 +825,6 @@ def run_m2():
     save_regression_chart(
         regression_results
     )
-
-
-    # ========================================================
-    # CLASSIFICATION
-    # ========================================================
 
     print()
     print(
@@ -1098,11 +1008,6 @@ def run_m2():
         classification_results
     )
 
-
-    # ========================================================
-    # SAVE RESULTS
-    # ========================================================
-
     all_results = (
         regression_results
         +
@@ -1158,10 +1063,6 @@ def run_m2():
         )
 
 
-    # --------------------------------------------------------
-    # SUMMARY CSV
-    # --------------------------------------------------------
-
     summary_df = pd.DataFrame(
         all_results
     )
@@ -1181,9 +1082,6 @@ def run_m2():
     )
 
 
-    # ========================================================
-    # SUCCESS
-    # ========================================================
 
     print()
     print("=" * 70)
@@ -1221,10 +1119,6 @@ def run_m2():
         "M2 is ready for M3."
     )
 
-
-# ============================================================
-# ENTRY POINT
-# ============================================================
 
 if __name__ == "__main__":
 

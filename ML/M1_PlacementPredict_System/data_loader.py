@@ -1,22 +1,11 @@
 from pathlib import Path
-
 import pandas as pd
-
-
-# =========================================================
-# PROJECT PATHS
-# =========================================================
 
 ROOT = Path(__file__).resolve().parents[2]
 
 DATA_DIR = ROOT / "data"
 
 DATA_FILE = DATA_DIR / "placement_predict_50k Dataset (2).csv"
-
-
-# =========================================================
-# LOAD DATASET
-# =========================================================
 
 def load_data():
 
@@ -38,11 +27,6 @@ def load_data():
     df = pd.read_csv(DATA_FILE)
 
     return df
-
-
-# =========================================================
-# DATASET INFORMATION
-# =========================================================
 
 def get_dataset_info(df):
 
@@ -81,11 +65,6 @@ def get_dataset_info(df):
     }
 
     return info
-
-
-# =========================================================
-# FEATURE COLUMNS
-# =========================================================
 
 CATEGORICAL_COLUMNS = [
 
@@ -158,11 +137,6 @@ CLASSIFICATION_TARGET = "PlacementStatus"
 
 REGRESSION_TARGET = "Salary Package"
 
-
-# =========================================================
-# FEATURE LIST
-# =========================================================
-
 BASE_FEATURES = (
 
     CATEGORICAL_COLUMNS
@@ -170,11 +144,6 @@ BASE_FEATURES = (
     + NUMERICAL_COLUMNS
 
 )
-
-
-# =========================================================
-# VALIDATE DATASET
-# =========================================================
 
 def validate_dataset(df):
 
@@ -223,11 +192,6 @@ def validate_dataset(df):
 
     return True
 
-
-# =========================================================
-# LOAD + VALIDATE
-# =========================================================
-
 def load_and_validate():
 
     """
@@ -239,11 +203,6 @@ def load_and_validate():
     validate_dataset(df)
 
     return df
-
-
-# =========================================================
-# MAIN TEST
-# =========================================================
 
 if __name__ == "__main__":
 

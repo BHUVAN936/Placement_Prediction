@@ -1,32 +1,9 @@
-# ============================================================
-# M1 - PLACEMENTPREDICT AS A SYSTEM
-# ============================================================
-#
-# Pipeline:
-#   1. Load Dataset
-#   2. Clean Dataset
-#   3. Feature Engineering
-#   4. EDA
-#   5. Preprocessing
-#
-# Outputs:
-#   reports/M1/
-#   models/M1/
-#
-# Windows-safe:
-#   No Unicode arrows/checkmarks are used in console output.
-# ============================================================
-
 
 import os
 import sys
 import json
 import warnings
 from pathlib import Path
-
-# ============================================================
-# WINDOWS UTF-8 SUPPORT
-# ============================================================
 
 os.environ["PYTHONIOENCODING"] = "utf-8"
 
@@ -46,11 +23,6 @@ if sys.platform == "win32":
     except Exception:
         pass
 
-
-# ============================================================
-# THIRD-PARTY IMPORTS
-# ============================================================
-
 import numpy as np
 import pandas as pd
 
@@ -69,11 +41,6 @@ from sklearn.preprocessing import (
 
 
 warnings.filterwarnings("ignore")
-
-
-# ============================================================
-# PROJECT PATHS
-# ============================================================
 
 ROOT = Path(
     __file__
@@ -104,11 +71,6 @@ MODEL_DIR.mkdir(
     exist_ok=True
 )
 
-
-# ============================================================
-# DATASET
-# ============================================================
-
 DATASET_NAME = (
     "placement_predict_50k Dataset (2).csv"
 )
@@ -117,10 +79,6 @@ TARGET_COLUMN = "PlacementStatus"
 
 REGRESSION_TARGET = "Salary Package"
 
-
-# ============================================================
-# ORIGINAL MODEL FEATURES
-# ============================================================
 
 MODEL_FEATURES = [
 
@@ -210,22 +168,12 @@ ENGINEERED_FEATURES = [
     "ExperienceScore"
 ]
 
-
-# ============================================================
-# UTILITY
-# ============================================================
-
 def print_header(title):
 
     print()
     print("=" * 70)
     print(title)
     print("=" * 70)
-
-
-# ============================================================
-# FIND DATASET
-# ============================================================
 
 def get_dataset_path():
 
@@ -252,11 +200,6 @@ def get_dataset_path():
 
     return csv_files[0]
 
-
-# ============================================================
-# LOAD DATA
-# ============================================================
-
 def load_dataset():
 
     dataset_path = get_dataset_path()
@@ -279,11 +222,6 @@ def load_dataset():
 
     return df
 
-
-# ============================================================
-# NORMALIZE COLUMN NAMES
-# ============================================================
-
 def normalize_columns(df):
 
     df = df.copy()
@@ -295,10 +233,6 @@ def normalize_columns(df):
 
     return df
 
-
-# ============================================================
-# CLEAN TARGET
-# ============================================================
 
 def clean_target(df):
 
@@ -413,11 +347,6 @@ def clean_target(df):
 
     return df
 
-
-# ============================================================
-# REMOVE EMPTY COLUMNS
-# ============================================================
-
 def remove_empty_columns(df):
 
     df = df.copy()
@@ -442,11 +371,6 @@ def remove_empty_columns(df):
 
     return df
 
-
-# ============================================================
-# REMOVE DUPLICATES
-# ============================================================
-
 def remove_duplicates(df):
 
     df = df.copy()
@@ -466,10 +390,6 @@ def remove_duplicates(df):
 
     return df
 
-
-# ============================================================
-# REPLACE INFINITE VALUES
-# ============================================================
 
 def replace_infinite_values(df):
 
@@ -491,10 +411,6 @@ def replace_infinite_values(df):
 
     return df
 
-
-# ============================================================
-# HANDLE MISSING VALUES
-# ============================================================
 
 def fill_missing_values(df):
 
@@ -559,11 +475,6 @@ def fill_missing_values(df):
 
     return df
 
-
-# ============================================================
-# CLEAN DATA
-# ============================================================
-
 def clean_data(df):
 
     print_header(
@@ -607,11 +518,6 @@ def clean_data(df):
 
     return df
 
-
-# ============================================================
-# FEATURE ENGINEERING
-# ============================================================
-
 def safe_numeric(
     df,
     column,
@@ -639,11 +545,6 @@ def feature_engineering(df):
     )
 
     df = df.copy()
-
-
-    # --------------------------------------------------------
-    # SGPA FEATURES
-    # --------------------------------------------------------
 
     sgpa_columns = [
 
@@ -695,11 +596,6 @@ def feature_engineering(df):
             "AcademicConsistency"
         ] = 0.0
 
-
-    # --------------------------------------------------------
-    # ACADEMIC SCORE
-    # --------------------------------------------------------
-
     cgpa = safe_numeric(
         df,
         "CGPA"
@@ -719,11 +615,6 @@ def feature_engineering(df):
             attendance / 10.0
         )
     )
-
-
-    # --------------------------------------------------------
-    # SKILL SCORE
-    # --------------------------------------------------------
 
     aptitude = safe_numeric(
         df,
@@ -752,11 +643,6 @@ def feature_engineering(df):
         )
     )
 
-
-    # --------------------------------------------------------
-    # INTERVIEW SCORE
-    # --------------------------------------------------------
-
     mock_interview = safe_numeric(
         df,
         "MockInterviewScore"
@@ -771,11 +657,6 @@ def feature_engineering(df):
             soft_skills * 10.0
         )
     )
-
-
-    # --------------------------------------------------------
-    # EXPERIENCE SCORE
-    # --------------------------------------------------------
 
     internships = safe_numeric(
         df,
@@ -829,11 +710,6 @@ def feature_engineering(df):
 
     return df
 
-
-# ============================================================
-# SAVE ENGINEERED DATASET
-# ============================================================
-
 def save_engineered_dataset(df):
 
     output_file = (
@@ -849,10 +725,6 @@ def save_engineered_dataset(df):
     return output_file
 
 
-# ============================================================
-# EDA
-# ============================================================
-
 def run_eda(df):
 
     print_header(
@@ -861,10 +733,6 @@ def run_eda(df):
 
     chart_count = 0
 
-
-    # --------------------------------------------------------
-    # 1. PLACEMENT BAR
-    # --------------------------------------------------------
 
     if TARGET_COLUMN in df.columns:
 
@@ -878,25 +746,49 @@ def run_eda(df):
             figsize=(8, 5)
         )
 
-        plt.bar(
-            [
-                str(x)
-                for x in counts.index
-            ],
-            counts.values
+        labels = ["Not Placed (0)", "Placed (1)"]
+        colors = ["#dc2626", "#16a34a"]
+
+        bars = plt.bar(
+            labels,
+            counts.values,
+            color=colors,
+            edgecolor="#1f2937",
+            linewidth=1.2,
+            width=0.55
         )
 
+        for bar in bars:
+            height = bar.get_height()
+            plt.text(
+                bar.get_x() + bar.get_width() / 2.0,
+                height + 400,
+                f"{height:,} ({height / counts.sum() * 100:.1f}%)",
+                ha="center",
+                va="bottom",
+                fontweight="bold",
+                fontsize=11
+            )
+
         plt.xlabel(
-            "Placement Status"
+            "Placement Status",
+            fontweight="bold",
+            fontsize=11
         )
 
         plt.ylabel(
-            "Number of Students"
+            "Number of Students",
+            fontweight="bold",
+            fontsize=11
         )
 
         plt.title(
-            "Placement Status Distribution"
+            "Placement Status Distribution (Not Placed vs Placed)",
+            fontweight="bold",
+            fontsize=13
         )
+        plt.ylim(0, max(counts.values) * 1.15)
+        plt.grid(axis='y', linestyle='--', alpha=0.5)
 
         plt.tight_layout()
 
@@ -905,38 +797,49 @@ def run_eda(df):
             / "01_placement_distribution.png",
             dpi=150
         )
+        plt.savefig(
+            REPORT_DIR
+            / "placement_distribution.png",
+            dpi=150
+        )
 
         plt.close()
 
         chart_count += 1
 
 
-    # --------------------------------------------------------
-    # 2. PLACEMENT PIE
-    # --------------------------------------------------------
-
     if TARGET_COLUMN in df.columns:
 
         counts = (
             df[TARGET_COLUMN]
             .value_counts()
+            .sort_index()
         )
 
         plt.figure(
             figsize=(7, 7)
         )
 
-        plt.pie(
+        labels = ["Not Placed (0)", "Placed (1)"]
+        colors = ["#dc2626", "#16a34a"]
+
+        wedges, texts, autotexts = plt.pie(
             counts.values,
-            labels=[
-                str(x)
-                for x in counts.index
-            ],
-            autopct="%1.1f%%"
+            labels=labels,
+            autopct="%1.1f%%",
+            startangle=90,
+            colors=colors,
+            wedgeprops={"edgecolor": "#ffffff", "linewidth": 2},
+            textprops={"fontsize": 12, "fontweight": "bold"}
         )
+        for autotext in autotexts:
+            autotext.set_color("white")
+            autotext.set_fontsize(13)
 
         plt.title(
-            "Placement Status Percentage"
+            "Placement Status Percentage",
+            fontweight="bold",
+            fontsize=14
         )
 
         plt.tight_layout()
@@ -946,15 +849,16 @@ def run_eda(df):
             / "02_placement_pie.png",
             dpi=150
         )
+        plt.savefig(
+            REPORT_DIR
+            / "placement_pie.png",
+            dpi=150
+        )
 
         plt.close()
 
         chart_count += 1
 
-
-    # --------------------------------------------------------
-    # 3. CGPA DISTRIBUTION
-    # --------------------------------------------------------
 
     if "CGPA" in df.columns:
 
@@ -991,10 +895,6 @@ def run_eda(df):
 
         chart_count += 1
 
-
-    # --------------------------------------------------------
-    # 4. ATTENDANCE DISTRIBUTION
-    # --------------------------------------------------------
 
     if "AttendancePercent" in df.columns:
 
@@ -1033,10 +933,6 @@ def run_eda(df):
 
         chart_count += 1
 
-
-    # --------------------------------------------------------
-    # 5. INTERNSHIPS
-    # --------------------------------------------------------
 
     if "Internships" in df.columns:
 
@@ -1082,10 +978,6 @@ def run_eda(df):
 
         chart_count += 1
 
-
-    # --------------------------------------------------------
-    # 6. SGPA
-    # --------------------------------------------------------
 
     sgpa_columns = [
 
@@ -1156,9 +1048,6 @@ def run_eda(df):
         chart_count += 1
 
 
-    # --------------------------------------------------------
-    # 7. ACADEMIC SCORE
-    # --------------------------------------------------------
 
     if (
         "AcademicScore" in df.columns
@@ -1213,10 +1102,6 @@ def run_eda(df):
         chart_count += 1
 
 
-    # --------------------------------------------------------
-    # 8. SKILL SCORE
-    # --------------------------------------------------------
-
     if (
         "SkillScore" in df.columns
         and TARGET_COLUMN in df.columns
@@ -1269,10 +1154,6 @@ def run_eda(df):
 
         chart_count += 1
 
-
-    # --------------------------------------------------------
-    # 9. CORRELATION
-    # --------------------------------------------------------
 
     numeric_df = (
         df.select_dtypes(
@@ -1337,10 +1218,6 @@ def run_eda(df):
         chart_count += 1
 
 
-    # --------------------------------------------------------
-    # 10. CGPA VS PLACEMENT
-    # --------------------------------------------------------
-
     if (
         "CGPA" in df.columns
         and TARGET_COLUMN in df.columns
@@ -1351,31 +1228,56 @@ def run_eda(df):
                 TARGET_COLUMN
             )["CGPA"]
             .mean()
+            .sort_index()
         )
 
         plt.figure(
             figsize=(8, 5)
         )
 
-        plt.bar(
-            [
-                str(x)
-                for x in grouped.index
-            ],
-            grouped.values
+        labels = ["Not Placed (0)", "Placed (1)"]
+        colors = ["#dc2626", "#16a34a"]
+
+        bars = plt.bar(
+            labels,
+            grouped.values,
+            color=colors,
+            edgecolor="#1f2937",
+            linewidth=1.2,
+            width=0.55
         )
 
+        for bar in bars:
+            height = bar.get_height()
+            plt.text(
+                bar.get_x() + bar.get_width() / 2.0,
+                height + 0.15,
+                f"Avg: {height:.2f}",
+                ha="center",
+                va="bottom",
+                fontweight="bold",
+                fontsize=11
+            )
+
         plt.xlabel(
-            "Placement Status"
+            "Placement Status",
+            fontweight="bold",
+            fontsize=11
         )
 
         plt.ylabel(
-            "Average CGPA"
+            "Average CGPA",
+            fontweight="bold",
+            fontsize=11
         )
 
         plt.title(
-            "Average CGPA by Placement Status"
+            "Average CGPA by Placement Status",
+            fontweight="bold",
+            fontsize=13
         )
+        plt.ylim(0, 10.0)
+        plt.grid(axis='y', linestyle='--', alpha=0.5)
 
         plt.tight_layout()
 
@@ -1384,14 +1286,16 @@ def run_eda(df):
             / "10_cgpa_vs_placement.png",
             dpi=150
         )
+        plt.savefig(
+            REPORT_DIR
+            / "cgpa_vs_placement.png",
+            dpi=150
+        )
 
         plt.close()
 
         chart_count += 1
 
-    # --------------------------------------------------------
-    # 11. MISSING VALUES ANALYSIS
-    # --------------------------------------------------------
     missing_counts = df.isna().sum()
     missing_cols = missing_counts[missing_counts > 0]
     if missing_cols.empty:
@@ -1408,9 +1312,6 @@ def run_eda(df):
     plt.close()
     chart_count += 1
 
-    # --------------------------------------------------------
-    # 12. DUPLICATES CHECK CHART
-    # --------------------------------------------------------
     total_rows = len(df)
     duplicate_rows = int(df.duplicated().sum())
     unique_rows = total_rows - duplicate_rows
@@ -1426,9 +1327,6 @@ def run_eda(df):
     plt.close()
     chart_count += 1
 
-    # --------------------------------------------------------
-    # 13. DATA TYPE DISTRIBUTION CHART
-    # --------------------------------------------------------
     dtypes_counts = df.dtypes.astype(str).value_counts()
     plt.figure(figsize=(7, 6))
     plt.pie(dtypes_counts.values, labels=dtypes_counts.index, autopct="%1.1f%%", colors=['#3498db', '#9b59b6', '#f1c40f', '#e67e22'])
@@ -1438,9 +1336,6 @@ def run_eda(df):
     plt.close()
     chart_count += 1
 
-    # --------------------------------------------------------
-    # 14. OUTLIER DETECTION CHART (BOXPLOTS)
-    # --------------------------------------------------------
     outlier_cols = [c for c in ["CGPA", "AttendancePercent", "AptitudeTestScore", "Salary Package"] if c in df.columns]
     if outlier_cols:
         fig, axes = plt.subplots(1, len(outlier_cols), figsize=(3.5 * len(outlier_cols), 5))
@@ -1456,9 +1351,7 @@ def run_eda(df):
         plt.close()
         chart_count += 1
 
-    # --------------------------------------------------------
-    # 15. PREPROCESSING: SCALING BEFORE vs AFTER
-    # --------------------------------------------------------
+
     scale_cols = [c for c in ["CGPA", "AttendancePercent", "AptitudeTestScore"] if c in df.columns]
     if scale_cols:
         # Before Scaling Plot
@@ -1488,9 +1381,7 @@ def run_eda(df):
         plt.close()
         chart_count += 1
 
-    # --------------------------------------------------------
-    # 16. ENGINEERED ACADEMIC & SKILL FEATURES COMBINED
-    # --------------------------------------------------------
+
     if "AcademicScore" in df.columns and "SkillScore" in df.columns:
         fig, axes = plt.subplots(1, 2, figsize=(10, 4.5))
         axes[0].hist(df["AcademicScore"].dropna(), bins=30, color='#8e44ad', alpha=0.8)
@@ -1519,15 +1410,8 @@ def run_eda(df):
     return chart_count
 
 
-# ============================================================
-# DATASET REPORTS
-# ============================================================
 
 def save_dataset_reports(df):
-
-    # --------------------------------------------------------
-    # NUMERICAL SUMMARY
-    # --------------------------------------------------------
 
     numeric_df = (
         df.select_dtypes(
@@ -1559,11 +1443,6 @@ def save_dataset_reports(df):
             index=False
         )
 
-
-    # --------------------------------------------------------
-    # MISSING VALUES
-    # --------------------------------------------------------
-
     missing = pd.DataFrame({
         "Column": df.columns,
         "MissingCount": [
@@ -1586,10 +1465,6 @@ def save_dataset_reports(df):
         index=False
     )
 
-
-    # --------------------------------------------------------
-    # CATEGORICAL SUMMARY
-    # --------------------------------------------------------
 
     categorical_columns = (
         df.select_dtypes(
@@ -1627,11 +1502,6 @@ def save_dataset_reports(df):
         / "m1_categorical_summary.csv",
         index=False
     )
-
-
-    # --------------------------------------------------------
-    # DATASET INFO
-    # --------------------------------------------------------
 
     dataset_info = {
 
@@ -1677,10 +1547,6 @@ def save_dataset_reports(df):
             indent=4
         )
 
-
-# ============================================================
-# PREPROCESSOR
-# ============================================================
 
 def create_one_hot_encoder():
 
@@ -1799,11 +1665,6 @@ def build_preprocessor(
         categorical
     )
 
-
-# ============================================================
-# GET FEATURE NAMES
-# ============================================================
-
 def get_transformed_feature_names(
     preprocessor,
     numerical,
@@ -1861,20 +1722,12 @@ def get_transformed_feature_names(
     return feature_names
 
 
-# ============================================================
-# RUN PREPROCESSING
-# ============================================================
-
 def run_preprocessing(df):
 
     print_header(
         "[5/5] Running preprocessing..."
     )
 
-
-    # --------------------------------------------------------
-    # Select model features
-    # --------------------------------------------------------
 
     available_features = [
 
@@ -1918,12 +1771,6 @@ def run_preprocessing(df):
     X = df[
         available_features
     ].copy()
-
-
-    # --------------------------------------------------------
-    # Build preprocessor
-    # --------------------------------------------------------
-
     (
         preprocessor,
         numerical,
@@ -1931,11 +1778,6 @@ def run_preprocessing(df):
     ) = build_preprocessor(
         available_features
     )
-
-
-    # --------------------------------------------------------
-    # Fit transform
-    # --------------------------------------------------------
 
     X_processed = (
         preprocessor
@@ -1953,11 +1795,6 @@ def run_preprocessing(df):
         f"Transformed features: "
         f"{X_processed.shape[1]}"
     )
-
-
-    # --------------------------------------------------------
-    # Feature names
-    # --------------------------------------------------------
 
     transformed_names = (
         get_transformed_feature_names(
@@ -1982,11 +1819,6 @@ def run_preprocessing(df):
             )
         ]
 
-
-    # --------------------------------------------------------
-    # Save preprocessor
-    # --------------------------------------------------------
-
     import joblib
 
 
@@ -2000,11 +1832,6 @@ def run_preprocessing(df):
         preprocessor,
         preprocessor_file
     )
-
-
-    # --------------------------------------------------------
-    # Save feature names
-    # --------------------------------------------------------
 
     feature_names_df = pd.DataFrame({
 
@@ -2024,10 +1851,6 @@ def run_preprocessing(df):
     )
 
 
-    # --------------------------------------------------------
-    # Save processed matrix
-    # --------------------------------------------------------
-
     processed_df = pd.DataFrame(
         X_processed,
         columns=transformed_names
@@ -2039,11 +1862,6 @@ def run_preprocessing(df):
         / "m1_processed_features.csv",
         index=False
     )
-
-
-    # --------------------------------------------------------
-    # Save model input feature names
-    # --------------------------------------------------------
 
     model_input_df = pd.DataFrame({
 
@@ -2083,11 +1901,6 @@ def run_preprocessing(df):
         "preprocessor_file":
             preprocessor_file
     }
-
-
-# ============================================================
-# SAVE FINAL M1 RESULTS
-# ============================================================
 
 def save_results(
     df,
@@ -2206,11 +2019,6 @@ def save_results(
         }
     }
 
-
-    # --------------------------------------------------------
-    # JSON
-    # --------------------------------------------------------
-
     with open(
         REPORT_DIR
         / "m1_results.json",
@@ -2279,11 +2087,6 @@ def save_results(
 
     return results
 
-
-# ============================================================
-# FINAL PIPELINE
-# ============================================================
-
 def run_m1():
 
     print()
@@ -2306,28 +2109,15 @@ def run_m1():
 
     try:
 
-        # ====================================================
-        # 1. LOAD
-        # ====================================================
-
         print()
         print("[1/5] Loading dataset...")
 
         df = load_dataset()
 
 
-        # ====================================================
-        # 2. CLEAN
-        # ====================================================
-
         df = clean_data(
             df
         )
-
-
-        # ====================================================
-        # 3. FEATURE ENGINEERING
-        # ====================================================
 
         df = feature_engineering(
             df
@@ -2346,39 +2136,19 @@ def run_m1():
             f"{engineered_file}"
         )
 
-
-        # ====================================================
-        # DATASET REPORTS
-        # ====================================================
-
         save_dataset_reports(
             df
         )
 
-
-        # ====================================================
-        # 4. EDA
-        # ====================================================
-
         chart_count = run_eda(
             df
         )
-
-
-        # ====================================================
-        # 5. PREPROCESSING
-        # ====================================================
 
         preprocessing_result = (
             run_preprocessing(
                 df
             )
         )
-
-
-        # ====================================================
-        # SAVE FINAL RESULTS
-        # ====================================================
 
         results = save_results(
 
@@ -2388,11 +2158,6 @@ def run_m1():
 
             chart_count
         )
-
-
-        # ====================================================
-        # SUCCESS
-        # ====================================================
 
         print()
         print("=" * 70)
@@ -2432,10 +2197,6 @@ def run_m1():
 
     except Exception as error:
 
-        # ====================================================
-        # FAILURE
-        # ====================================================
-
         print()
         print("=" * 70)
         print("M1 TRAINING FAILED")
@@ -2453,10 +2214,6 @@ def run_m1():
 
         raise
 
-
-# ============================================================
-# ENTRY POINT
-# ============================================================
 
 if __name__ == "__main__":
 
